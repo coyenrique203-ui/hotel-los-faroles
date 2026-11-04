@@ -48,7 +48,7 @@ grant select,insert on public.invitaciones_resena to authenticated;
 grant select on public.resenas_huespedes to authenticated,anon;
 grant usage on sequence public.invitaciones_resena_id_seq to authenticated;
 
-create or replace function public.puede_administrar_sede(p_sede bigint)
+create or replace function public.puede_administrar_resenas_sede(p_sede bigint)
 returns boolean language sql stable security definer set search_path=public
 as $$
  select exists (
@@ -58,22 +58,22 @@ as $$
   )))
  );
 $$;
-revoke all on function public.puede_administrar_sede(bigint) from public;
-grant execute on function public.puede_administrar_sede(bigint) to authenticated;
+revoke all on function public.puede_administrar_resenas_sede(bigint) from public;
+grant execute on function public.puede_administrar_resenas_sede(bigint) to authenticated;
 
 alter table public.invitaciones_resena enable row level security;
 alter table public.resenas_huespedes enable row level security;
 
 drop policy if exists invitaciones_admin_select on public.invitaciones_resena;
 create policy invitaciones_admin_select on public.invitaciones_resena
- for select to authenticated using (public.puede_administrar_sede(sede_id));
+ for select to authenticated using (public.puede_administrar_resenas_sede(sede_id));
 drop policy if exists invitaciones_admin_insert on public.invitaciones_resena;
 create policy invitaciones_admin_insert on public.invitaciones_resena
- for insert to authenticated with check (public.puede_administrar_sede(sede_id) and creado_por=auth.uid());
+ for insert to authenticated with check (public.puede_administrar_resenas_sede(sede_id) and creado_por=auth.uid());
 
 drop policy if exists resenas_admin_select on public.resenas_huespedes;
 create policy resenas_admin_select on public.resenas_huespedes
- for select to authenticated using (public.puede_administrar_sede(sede_id));
+ for select to authenticated using (public.puede_administrar_resenas_sede(sede_id));
 drop policy if exists resenas_public_select on public.resenas_huespedes;
 create policy resenas_public_select on public.resenas_huespedes
  for select to anon using (estado='publicada' and exists (
@@ -81,8 +81,8 @@ create policy resenas_public_select on public.resenas_huespedes
  ));
 drop policy if exists resenas_admin_update on public.resenas_huespedes;
 create policy resenas_admin_update on public.resenas_huespedes
- for update to authenticated using (public.puede_administrar_sede(sede_id))
- with check (public.puede_administrar_sede(sede_id));
+ for update to authenticated using (public.puede_administrar_resenas_sede(sede_id))
+ with check (public.puede_administrar_resenas_sede(sede_id));
 -- El personal puede cambiar el estado, nunca la puntuación ni el comentario.
 revoke update on public.resenas_huespedes from anon,authenticated;
 grant update (estado,revisado_en,revisado_por) on public.resenas_huespedes to authenticated;
