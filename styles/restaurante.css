@@ -31,7 +31,7 @@
 .restaurant-dishes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}
 .restaurant-dish{display:flex;background:#fff;border:1px solid #e7e9e2;min-height:142px;overflow:hidden}
 .restaurant-dish-photo{position:relative;flex:0 0 34%;min-height:142px;overflow:hidden}
-.restaurant-dish-photo img{width:100%;height:100%;object-fit:cover}
+.restaurant-dish-photo .photo{position:absolute;inset:0;background-size:cover;background-position:center}
 .restaurant-dish-body{padding:22px 24px;flex:1}
 .restaurant-dish-body>div{display:flex;align-items:flex-start;justify-content:space-between;gap:15px}
 .restaurant-dish h4{font:400 23px 'Playfair Display',serif;color:#273a31;margin:0}
