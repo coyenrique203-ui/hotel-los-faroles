@@ -17,7 +17,7 @@ export default async function SedeDetailPage({params,searchParams}:{params:Promi
  const sede=await getSedeForAdmin(admin,numericId);if(!sede)notFound();
  const [{imagenes},reservasData]=await Promise.all([getGaleria(admin,numericId),getReservaAdminData(numericId,sede.tipo==='hotel')]);
  const {status,tab}=await searchParams;
- return <AdminShell adminName={admin.nombre}><div className="admin-page-head"><Link className="sede-back" href="/admin/sedes"><ArrowLeft size={16}/> VOLVER A SEDES</Link><h1>Editar {sede.nombre}</h1><p>Actualiza su información pública. Los cambios se guardan al presionar «Guardar cambios».</p></div>
+ return <AdminShell adminName={admin.nombre} adminRole={admin.rol}><div className="admin-page-head"><Link className="sede-back" href="/admin/sedes"><ArrowLeft size={16}/> VOLVER A SEDES</Link><h1>Editar {sede.nombre}</h1><p>Actualiza su información pública. Los cambios se guardan al presionar «Guardar cambios».</p></div>
  <SedeTabs initialTab={tab==='fotos'?'fotos':tab==='reservas'?'reservas':'info'} photoCount={imagenes.length} info={<>
  {status==='ok'&&<div className="sede-success" role="status">Los datos de la sede se actualizaron correctamente.</div>}
  {tab!=='fotos'&&status==='error'&&<div className="sede-error" role="alert">No fue posible guardar los cambios. Revisa los datos e inténtalo de nuevo.</div>}

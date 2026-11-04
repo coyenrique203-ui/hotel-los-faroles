@@ -12,5 +12,5 @@ export default async function RoomGalleryPage({params,searchParams}:{params:Prom
  const gallery=await getRoomGallery(admin,typeId);
  if(!gallery)notFound();
  const {status}=await searchParams;
- return <AdminShell adminName={admin.nombre}><RoomPhotoGallery {...gallery} status={status}/></AdminShell>;
+ return <AdminShell adminName={admin.nombre} adminRole={admin.rol}><RoomPhotoGallery {...gallery} status={status}/></AdminShell>;
 }
