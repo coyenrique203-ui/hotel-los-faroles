@@ -2,7 +2,7 @@ import 'server-only';
 import {createClient} from '@/lib/supabase/server';
 import {venues,type Venue} from '@/lib/hotel-content';
 
-type SedePublica={id:number;nombre:string;slug:string;tipo:string;descripcion:string|null;direccion:string|null;telefono:string|null;telefonos_adicionales:string[]|null;google_maps_url:string|null;whatsapp:string|null;email:string|null;imagen_principal:string|null};
+type SedePublica={id:number;nombre:string;slug:string;tipo:string;descripcion:string|null;direccion:string|null;telefono:string|null;telefonos_adicionales:string[]|null;google_maps_url:string|null;google_rating:number|null;google_reviews_count:number|null;google_reviews_checked_at:string|null;whatsapp:string|null;email:string|null;imagen_principal:string|null};
 type ImagenPublica={url_publica:string;texto_alternativo:string|null;titulo:string|null;destacada:boolean};
 type TipoHabitacionPublica={id:number;nombre:string;descripcion_corta:string|null;descripcion_detallada:string|null;capacidad_personas:number;cantidad_camas:number;tipo_cama:string|null;precio_desde:number|null;imagen_principal:string|null;comodidades:string[]};
 
@@ -15,6 +15,8 @@ export type PublicVenue=Venue&{
  direccion?:string;
  telefono?:string;
  telefonosAdicionales?:string[];
+ sedeId?:number;
+ googleRating?:number|null; googleReviewsCount?:number|null; googleReviewsCheckedAt?:string|null;
  googleMapsUrl?:string;
  whatsapp?:string;
  email?:string;
@@ -28,7 +30,7 @@ export async function getPublicVenue(slug:'coban'|'antigua'|'restaurante'|'event
   const db=await createClient();
   // El filtro explícito se aplica incluso cuando un administrador está autenticado.
   const {data,error}=await db.from('sedes')
-   .select('id,nombre,slug,tipo,descripcion,direccion,telefono,telefonos_adicionales,google_maps_url,whatsapp,email,imagen_principal')
+   .select('id,nombre,slug,tipo,descripcion,direccion,telefono,telefonos_adicionales,google_maps_url,google_rating,google_reviews_count,google_reviews_checked_at,whatsapp,email,imagen_principal')
    .eq('slug',slug).eq('publicado',true).maybeSingle();
   if(error||!data)return {...fallback,oficial:false,imagenesOficiales:false};
   const sede=data as SedePublica;
@@ -72,6 +74,7 @@ export async function getPublicVenue(slug:'coban'|'antigua'|'restaurante'|'event
    location:sede.direccion||fallback.location,hero,
    gallery:galleryItems.length?galleryItems.map(f=>f.src):fallback.gallery,
    galleryItems:galleryItems.length?galleryItems:undefined,
+   sedeId:sede.id,googleRating:sede.google_rating==null?null:Number(sede.google_rating),googleReviewsCount:sede.google_reviews_count,googleReviewsCheckedAt:sede.google_reviews_checked_at,
    oficial:true,imagenesOficiales:galleryItems.length>0,
    heroOficial:Boolean(sede.imagen_principal||fotos.length),rooms,
    direccion:sede.direccion||undefined,telefono:sede.telefono||undefined,

@@ -4,7 +4,7 @@ import {createClient} from '@supabase/supabase-js';
 import {venues} from '@/lib/hotel-content';
 import type {PublicVenue,PublicRoom} from '@/lib/public-content';
 
-type Establishment={id:number;nombre:string;slug:string;tipo:string;descripcion:string|null;direccion:string|null;telefono:string|null;telefonos_adicionales:string[]|null;google_maps_url:string|null;whatsapp:string|null;email:string|null;imagen_principal:string|null};
+type Establishment={id:number;nombre:string;slug:string;tipo:string;descripcion:string|null;direccion:string|null;telefono:string|null;telefonos_adicionales:string[]|null;google_maps_url:string|null;google_rating:number|null;google_reviews_count:number|null;google_reviews_checked_at:string|null;whatsapp:string|null;email:string|null;imagen_principal:string|null};
 type ImageRow={url_publica:string;texto_alternativo:string|null;titulo:string|null;destacada:boolean};
 type RoomRow={id:number;nombre:string;descripcion_corta:string|null;descripcion_detallada:string|null;capacidad_personas:number;cantidad_camas:number;tipo_cama:string|null;precio_desde:number|null;imagen_principal:string|null};
 type RoomImageRow={tipo_habitacion_id:number;url_publica:string;texto_alternativo:string|null;titulo:string|null;destacada:boolean};
@@ -34,7 +34,7 @@ export const getPublishedEstablishment=cache(async (slug:string):Promise<PublicV
  try{
   const client=db();
   const {data,error}=await client.from('sedes')
-   .select('id,nombre,slug,tipo,descripcion,direccion,telefono,telefonos_adicionales,google_maps_url,whatsapp,email,imagen_principal')
+   .select('id,nombre,slug,tipo,descripcion,direccion,telefono,telefonos_adicionales,google_maps_url,google_rating,google_reviews_count,google_reviews_checked_at,whatsapp,email,imagen_principal')
    .eq('slug',slug).eq('publicado',true).maybeSingle();
   if(error||!data||!['hotel','restaurante','eventos'].includes(data.tipo))return null;
   const sede=data as Establishment;
@@ -79,6 +79,7 @@ export const getPublishedEstablishment=cache(async (slug:string):Promise<PublicV
    gallery:galleryItems.length?galleryItems.map(item=>item.src):base.gallery,
    galleryItems:galleryItems.length?galleryItems:undefined,
    oficial:true,imagenesOficiales:galleryItems.length>0,heroOficial:Boolean(image),
+   sedeId:sede.id,googleRating:sede.google_rating==null?null:Number(sede.google_rating),googleReviewsCount:sede.google_reviews_count,googleReviewsCheckedAt:sede.google_reviews_checked_at,
    rooms,direccion:sede.direccion||undefined,telefono:sede.telefono||undefined,
    telefonosAdicionales:(sede.telefonos_adicionales??[]).filter(Boolean),
    googleMapsUrl:sede.google_maps_url||undefined,whatsapp:sede.whatsapp||undefined,email:sede.email||undefined,

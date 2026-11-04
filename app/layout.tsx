@@ -7,6 +7,7 @@ import "@/styles/sedes-admin.css";
 import "@/styles/galeria-admin.css";
 import "@/styles/habitaciones-admin.css";
 import "@/styles/habitaciones-galeria.css";
+import "@/styles/resenas.css";
 
 export const metadata: Metadata = {
   title: "Hotel Los Faroles | Cobán y Antigua Guatemala",

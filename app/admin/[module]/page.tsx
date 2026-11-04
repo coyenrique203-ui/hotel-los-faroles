@@ -12,6 +12,7 @@ import {getRoomAdminData} from '@/lib/admin/habitaciones';
 import {getHomeCover} from '@/lib/portada-principal';
 import {PortadaAdmin} from '@/components/admin/portada/portada-admin';
 import {redirect} from 'next/navigation';
+import {ReviewAdmin} from '@/components/admin/resenas/review-admin';
 export default async function AdminModulePage({params,searchParams}:{params:Promise<{module:string}>;searchParams:Promise<{sede?:string;status?:string;tipo?:string}>}){
  const admin=await requireAdmin();const {module}=await params;if(!adminModules.some(m=>m.slug===module))notFound();
  let content:React.ReactNode=<AdminModule slug={module}/>;
@@ -30,6 +31,10 @@ export default async function AdminModulePage({params,searchParams}:{params:Prom
   const selectedId=sede?Number(sede):(sedes[0]?.id??0);
   const result=selectedId?await getGaleria(admin,selectedId,sedes):null;
   content=<GalleryAdmin sedes={sedes} selected={sedes.find(s=>s.id===selectedId)??null} imagenes={result?.imagenes??[]} status={status}/>;
+ }
+ if(module==='resenas'){
+  const {sede}=await searchParams;
+  content=<ReviewAdmin admin={admin} sedeId={sede?Number(sede):undefined}/>;
  }
  if(module==='habitaciones'){
   const {sede,status,tipo}=await searchParams;
