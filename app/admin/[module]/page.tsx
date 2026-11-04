@@ -12,7 +12,7 @@ import {getRoomAdminData} from '@/lib/admin/habitaciones';
 import {getHomeCover} from '@/lib/portada-principal';
 import {PortadaAdmin} from '@/components/admin/portada/portada-admin';
 import {redirect} from 'next/navigation';
-export default async function AdminModulePage({params,searchParams}:{params:Promise<{module:string}>;searchParams:Promise<{sede?:string;status?:string;tipo?:string;unidad?:string}>}){
+export default async function AdminModulePage({params,searchParams}:{params:Promise<{module:string}>;searchParams:Promise<{sede?:string;status?:string;tipo?:string}>}){
  const admin=await requireAdmin();const {module}=await params;if(!adminModules.some(m=>m.slug===module))notFound();
  let content:React.ReactNode=<AdminModule slug={module}/>;
  if(module==='portada'){
@@ -32,9 +32,9 @@ export default async function AdminModulePage({params,searchParams}:{params:Prom
   content=<GalleryAdmin sedes={sedes} selected={sedes.find(s=>s.id===selectedId)??null} imagenes={result?.imagenes??[]} status={status}/>;
  }
  if(module==='habitaciones'){
-  const {sede,status,tipo,unidad}=await searchParams;
+  const {sede,status,tipo}=await searchParams;
   const data=await getRoomAdminData(admin,sede?Number(sede):undefined);
-  content=<RoomAdmin {...data} status={status} tipoId={tipo?Number(tipo):undefined} unidadId={unidad?Number(unidad):undefined}/>;
+  content=<RoomAdmin {...data} status={status} tipoId={tipo?Number(tipo):undefined}/>;
  }
  return <AdminShell adminName={admin.nombre}>{content}</AdminShell>;
 }

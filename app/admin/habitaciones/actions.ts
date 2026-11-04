@@ -39,22 +39,3 @@ export async function saveRoomType(form:FormData){
  redirect(destination(sede,'saved'));
 }
 
-export async function saveRoomUnit(form:FormData){
- const sede=Number(form.get('sede_id'));const db=await authorizedHotel(sede);
- const id=Number(form.get('id')||0),type=Number(form.get('tipo_habitacion_id'));
- const numero=val(form,'numero',60),estado=val(form,'estado',30);
- if(!validId(type)||!numero||!['operativa','mantenimiento','fuera_servicio'].includes(estado))redirect(destination(sede,'invalid'));
- const {data:tipo}=await db.from('tipos_habitacion').select('id').eq('id',type).eq('sede_id',sede).maybeSingle();
- if(!tipo)redirect(destination(sede,'invalid'));
- const record={sede_id:sede,tipo_habitacion_id:type,numero,piso:val(form,'piso',50)||null,estado,observaciones:val(form,'observaciones',2000)||null,activa:form.get('activa')==='on'};
- let error;
- if(validId(id)){
-  const result=await db.from('habitaciones').update(record).eq('id',id).eq('sede_id',sede).select('id').maybeSingle();
-  error=result.error||(!result.data?new Error('No autorizado'):null);
- }else{
-  const result=await db.from('habitaciones').insert(record).select('id').maybeSingle();
-  error=result.error||(!result.data?new Error('No insertado'):null);
- }
- if(error)redirect(destination(sede,'saveerror'));
- revalidatePath('/admin/habitaciones');redirect(destination(sede,'saved'));
-}
