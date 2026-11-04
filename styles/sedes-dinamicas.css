@@ -1,0 +1,14 @@
+/* Estilos aislados para establecimientos añadidos desde administración. */
+.new-sede-card{margin-top:0;margin-bottom:24px;border-color:#d8dfd6;background:#fbfcfa}
+.new-sede-trigger{list-style:none;cursor:pointer;padding:19px 27px;display:flex;justify-content:space-between;align-items:center;gap:16px}
+.new-sede-trigger::-webkit-details-marker{display:none}
+.new-sede-trigger>span{font:600 11px 'Jost',sans-serif;letter-spacing:.15em;color:#345c4c}
+.new-sede-trigger>small{color:#718278;font-size:12px}
+.new-sede-card[open] .new-sede-trigger{border-bottom:1px solid #e4e9e2}
+.new-sede-form{padding:26px;display:flex;flex-direction:column;gap:20px}
+.new-sede-form .sede-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+.new-sede-form select{width:100%;border:1px solid #dce3dc;border-radius:6px;background:white;padding:13px;color:#263a30;font:inherit}
+.new-sede-form p{font-size:12px;color:#718278;line-height:1.7;margin:0}
+.new-sede-form button[type=submit]{align-self:flex-start}
+.destination-bottom .destination-name{font-size:clamp(28px,3.5vw,53px);line-height:1.12;max-width:500px;overflow-wrap:anywhere}
+@media(max-width:640px){.new-sede-trigger{align-items:flex-start;flex-direction:column}.new-sede-form .sede-form-grid{grid-template-columns:1fr}.destination-bottom .destination-name{font-size:clamp(27px,8vw,41px)}}

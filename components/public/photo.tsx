@@ -1,0 +1,1 @@
+export function Photo({src,alt,className=''}:{src:string;alt:string;className?:string}) { return <div className={`photo ${className}`} role="img" aria-label={alt} style={{backgroundImage:`url("${src}")`}}/>; }
