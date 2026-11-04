@@ -13,9 +13,12 @@ import {getHomeCover} from '@/lib/portada-principal';
 import {PortadaAdmin} from '@/components/admin/portada/portada-admin';
 import {redirect} from 'next/navigation';
 import {ReviewAdmin} from '@/components/admin/resenas/review-admin';
+import {UsersAdmin} from '@/components/admin/usuarios/users-admin';
 export default async function AdminModulePage({params,searchParams}:{params:Promise<{module:string}>;searchParams:Promise<{sede?:string;status?:string;tipo?:string}>}){
  const admin=await requireAdmin();const {module}=await params;if(!adminModules.some(m=>m.slug===module))notFound();
+ if((module==='usuarios'||module==='portada')&&admin.rol!=='general')redirect('/admin');
  let content:React.ReactNode=<AdminModule slug={module}/>;
+ if(module==='usuarios')content=<UsersAdmin/>;
  if(module==='portada'){
   if(admin.rol!=='general')redirect('/admin');
   const {status}=await searchParams;
@@ -41,5 +44,5 @@ export default async function AdminModulePage({params,searchParams}:{params:Prom
   const data=await getRoomAdminData(admin,sede?Number(sede):undefined);
   content=<RoomAdmin {...data} status={status} tipoId={tipo?Number(tipo):undefined}/>;
  }
- return <AdminShell adminName={admin.nombre}>{content}</AdminShell>;
+ return <AdminShell adminName={admin.nombre} adminRole={admin.rol}>{content}</AdminShell>;
 }
