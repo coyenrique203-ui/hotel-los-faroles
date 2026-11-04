@@ -24,12 +24,16 @@ export async function createActivity(form:FormData){
  const fecha=String(form.get('fecha_evento')??'');
  const files=form.getAll('fotos').filter((f):f is File=>f instanceof File&&f.size>0);
  if(titulo.length<3||(fecha&&!/^\d{4}-\d{2}-\d{2}$/.test(fecha))||files.length>8||!files.length)redirect(back(id,'invalid'));
- const r2=getR2();if(!r2)redirect(back(id,'config'));
- const images:{key:string;url:string}[]=[];
+ const checked:{file:File;bytes:Uint8Array}[]=[];
  for(const file of files){
   if(file.size>8*1024*1024||!formats[file.type])redirect(back(id,'invalid'));
   const bytes=new Uint8Array(await file.arrayBuffer());
   if(!valid(bytes,file.type))redirect(back(id,'invalid'));
+  checked.push({file,bytes});
+ }
+ const r2=getR2();if(!r2)redirect(back(id,'config'));
+ const images:{key:string;url:string}[]=[];
+ for(const {file,bytes} of checked){
   const key=`eventos/${sede.slug}/${crypto.randomUUID()}.${formats[file.type]}`;
   try{await r2.upload(key,bytes,file.type);images.push({key,url:r2.publicUrl(key)});}catch{
    for(const image of images)try{await r2.remove(image.key);}catch{}
