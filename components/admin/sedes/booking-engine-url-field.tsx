@@ -6,7 +6,7 @@ function analyze(value:string){
  try{
   const url=new URL(value);
   const secure=url.protocol==='https:'&&!url.username&&!url.password;
-  const cloudbeds=url.hostname==='hotels.cloudbeds.com'&&/^\/(?:[a-z]{2}\/)?reservation\//i.test(url.pathname);
+  const cloudbeds=url.hostname==='hotels.cloudbeds.com'&&url.pathname.split('/').includes('reservation');
   return {secure,cloudbeds};
  }catch{return {secure:false,cloudbeds:false};}
 }
