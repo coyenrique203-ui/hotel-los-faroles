@@ -29,7 +29,7 @@ export async function EstablishmentEditor({id,kind,status,tab}:{id:number;kind:'
  {status==='ok'&&<div className="sede-success" role="status">Información guardada correctamente.</div>}
  {tab!=='fotos'&&status==='error'&&<div className="sede-error" role="alert">No fue posible guardar los cambios. Revisa los campos.</div>}
  {tab!=='fotos'&&status==='denegado'&&<div className="sede-error" role="alert">No tienes permisos para modificar este establecimiento.</div>}
- <SedeForm sede={sede}/></>} photos={<SedePhotos sede={sede} imagenes={imagenes} status={tab==='fotos'?status:undefined}/>}
+ <SedeForm sede={sede}/></>} photos={<SedePhotos sede={sede} imagenes={imagenes} status={tab==='fotos'?status:undefined} social={kind!=='hotel'}/>}
  reviews={kind!=='hotel'?<EstablishmentReviews sede={sede}/>:undefined}
  activities={kind==='eventos'?<EventActivitiesAdmin sede={sede} status={tab==='actividades'?status:undefined}/>:undefined}
  reservas={kind==='hotel'&&reservasData?<SedeReservaciones sede={sede} config={reservasData.config} tipos={reservasData.tipos} status={tab==='reservas'?status:undefined}/>:undefined}/></AdminShell>;
