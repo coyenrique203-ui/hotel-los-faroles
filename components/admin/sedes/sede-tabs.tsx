@@ -4,7 +4,7 @@ import {useState,type ReactNode} from 'react';
 import {Images, MapPin, CalendarCheck, PartyPopper} from 'lucide-react';
 
 export function SedeTabs({info,photos,reservas,activities,initialTab='info',photoCount}:{info:ReactNode;photos:ReactNode;reservas?:ReactNode;activities?:ReactNode;initialTab?:'info'|'fotos'|'reservas'|'actividades';photoCount:number}){
- const [active,setActive]=useState<'info'|'fotos'|'reservas'|'actividades'|'resenas'>(initialTab);
+ const [active,setActive]=useState<'info'|'fotos'|'reservas'|'actividades'>(initialTab);
  return <div className="sede-tab-layout">
   <div className="sede-tabs" role="tablist" aria-label="Secciones de la sede">
    <button id="sede-tab-info" type="button" role="tab" aria-selected={active==='info'} aria-controls="sede-panel-info" className={active==='info'?'active':''} onClick={()=>setActive('info')}><MapPin size={17}/> Información general</button>
