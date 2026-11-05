@@ -18,11 +18,13 @@ export async function VenuePage({venue}:{venue:PublicVenue}){
   const rooms=await withRoomAmenities(venue.rooms);
   const hotel=venue.type==='hotel';
   const restaurant=venue.type==='restaurant';
+  const heroPhrase=hotel?'Cada estancia, una nueva historia.':venue.tagline;
+  const welcomePhrase=hotel?'Hospitalidad en cada detalle.':venue.tagline;
   const action=hotel?'SOLICITAR RESERVA':restaurant?'CONSULTAR MESA':'CONSULTAR FECHA';
   const whatsappNumber=venue.whatsapp||config?.whatsapp_numero;
   return <main className="venue-page">
-    <section className="venue-hero"><Photo src={venue.hero} alt={(venue.heroOficial?'Imagen principal de ':'Fotografía ilustrativa de ')+venue.name}/><div className="venue-hero-shade"/><div className="venue-hero-content"><span className="eyebrow gold">LOS FAROLES · {venue.location.toUpperCase()}</span><h1>{venue.name}</h1><p>{venue.tagline}</p><a href="#descubrir" className="hero-link">DESCUBRE ESTE ESPACIO <ArrowUpRight size={18}/></a></div>{!venue.heroOficial&&<div className="venue-credit">Fotografía de inspiración · contenido de muestra</div>}</section>
-    <section className="venue-intro wrap" id="descubrir"><div><span className="eyebrow">BIENVENIDO A {venue.name.toUpperCase()}</span><h2>{venue.tagline}</h2></div><div><p>{venue.introduction}</p><div className="venue-location"><MapPin size={17}/>{venue.location}</div>{venue.oficial&&<div className="venue-contact-links">
+    <section className="venue-hero"><Photo src={venue.hero} alt={(venue.heroOficial?'Imagen principal de ':'Fotografía ilustrativa de ')+venue.name}/><div className="venue-hero-shade"/><div className="venue-hero-content"><span className="eyebrow gold">LOS FAROLES · {venue.location.toUpperCase()}</span><h1>{venue.name}</h1><p>{heroPhrase}</p><a href="#descubrir" className="hero-link">DESCUBRE ESTE ESPACIO <ArrowUpRight size={18}/></a></div>{!venue.heroOficial&&<div className="venue-credit">Fotografía de inspiración · contenido de muestra</div>}</section>
+    <section className="venue-intro wrap" id="descubrir"><div><span className="eyebrow">BIENVENIDO A {venue.name.toUpperCase()}</span><h2>{welcomePhrase}</h2></div><div><p>{venue.introduction}</p><div className="venue-location"><MapPin size={17}/>{venue.location}</div>{venue.oficial&&<div className="venue-contact-links">
       {venue.telefono&&<a href={`tel:${venue.telefono.replace(/[^+\d]/g,'')}`}>Tel. {venue.telefono}</a>}
       {Boolean(venue.telefonosAdicionales?.length)&&<details className="venue-other-phones"><summary>Otros teléfonos ({venue.telefonosAdicionales?.length})</summary><div className="venue-other-phones-list">{venue.telefonosAdicionales?.map((numero,index)=><a key={`${numero}-${index}`} href={`tel:${numero.replace(/[^+\d]/g,'')}`}>{numero}</a>)}</div></details>}
       {venue.whatsapp&&<a href={`https://wa.me/${venue.whatsapp.replace(/\D/g,'')}`} target="_blank" rel="noopener noreferrer">WhatsApp <ArrowUpRight size={14}/></a>}
