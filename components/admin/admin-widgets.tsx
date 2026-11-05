@@ -1,12 +1,24 @@
 import Link from 'next/link';
-import {ArrowUpRight,Building2,CalendarClock,Image,UtensilsCrossed} from 'lucide-react';
+import {ArrowUpRight,Building2,UtensilsCrossed,PartyPopper} from 'lucide-react';
 import {adminModules} from '@/lib/admin-modules';
-export function AdminDashboard({adminRole='general'}:{adminRole?:'general'|'sede'}){return <><div className="admin-page-head"><span>INICIO / RESUMEN</span><h1>Bienvenido a Los Faroles.</h1><p>Tu cuenta administrativa ya está autenticada. Los módulos de contenido y reservas se conectarán en las siguientes fases.</p></div><div className="admin-alert">El acceso al panel ya está protegido. Las tarjetas y los registros que se muestran aquí siguen siendo datos de demostración; no guardan cambios ni gestionan reservas reales.</div>
-  <div className="admin-stat-grid"><div><Building2/><span>SEDES CONFIGURADAS</span><strong>2</strong><small>Cobán y Antigua</small></div><div><CalendarClock/><span>RESERVAS REALES</span><strong>—</strong><small>Integración pendiente</small></div><div><UtensilsCrossed/><span>RESTAURANTE</span><strong>1</strong><small>Módulo preparado</small></div><div><Image/><span>GALERÍAS</span><strong>—</strong><small>R2 pendiente</small></div></div>
-  <div className="admin-card"><div className="admin-card-head"><h2>Administrar contenido</h2><p>Accesos a los módulos de trabajo</p></div><div className="admin-shortcuts">{adminModules.filter(m=>m.slug&&m.slug!=='configuracion'&&(adminRole==='general'||!['usuarios','portada'].includes(m.slug))).map(m=><Link href={'/admin/'+m.slug} key={m.slug}><m.icon size={22}/><div><strong>{m.label}</strong><small>{m.description}</small></div><ArrowUpRight size={17}/></Link>)}</div></div>
-</>}
+import type {Sede} from '@/lib/admin/sedes';
+
+export function AdminDashboard({adminRole='general',sedes=[]}:{adminRole?:'general'|'sede';sedes?:Sede[]}){
+ const hotels=sedes.filter(s=>s.tipo==='hotel').length;
+ const restaurants=sedes.filter(s=>s.tipo==='restaurante').length;
+ const venues=sedes.filter(s=>s.tipo==='eventos').length;
+ return <><div className="admin-page-head"><span>INICIO / RESUMEN</span><h1>Bienvenido a Los Faroles.</h1><p>Administra los establecimientos, las fotografías y el contenido desde un solo lugar.</p></div>
+ <div className="admin-stat-grid">
+  <div><Building2/><span>HOTELES</span><strong>{hotels}</strong><small>Sedes disponibles</small></div>
+  <div><UtensilsCrossed/><span>RESTAURANTES</span><strong>{restaurants}</strong><small>Establecimientos disponibles</small></div>
+  <div><PartyPopper/><span>SALONES DE EVENTOS</span><strong>{venues}</strong><small>Espacios disponibles</small></div>
+ </div>
+ <div className="admin-card"><div className="admin-card-head"><h2>Administrar contenido</h2><p>Selecciona una sección para continuar.</p></div><div className="admin-shortcuts">{adminModules.filter(m=>m.slug&&!['reservas','contenido','configuracion'].includes(m.slug)&&(adminRole==='general'||!['usuarios','portada'].includes(m.slug))).map(m=><Link href={'/admin/'+m.slug} key={m.slug}><m.icon size={22}/><div><strong>{m.label}</strong><small>{m.description}</small></div><ArrowUpRight size={17}/></Link>)}</div></div>
+ </>;
+}
+
 export function AdminModule({slug}:{slug:string}){
  const item=adminModules.find(m=>m.slug===slug)!;
- const rows:Record<string,string[]>={sedes:['Los Faroles Cobán','Los Faroles Antigua'],habitaciones:['Habitación Clásica · ejemplo','Habitación Superior · ejemplo'],reservas:[],galeria:[],restaurante:['Restaurante Los Faroles'],eventos:['Salón de Eventos · próximamente'],contenido:['Página principal','Hotel Cobán','Hotel Antigua','Restaurante','Eventos'],usuarios:[],configuracion:[]};
- return <><div className="admin-page-head"><span>INICIO / {item.label.toUpperCase()}</span><h1>{item.label}</h1><p>{item.description}. Este módulo tiene su propia ruta y está preparado para recibir formularios y operaciones reales.</p></div><div className="admin-alert">Vista de diseño: los datos mostrados son ejemplos y los cambios aún no se guardan.</div><div className="admin-card"><div className="admin-card-head"><h2>{item.label}</h2><p>Contenido inicial del módulo</p></div><div className="admin-list">{(rows[slug]||[]).length?(rows[slug]||[]).map((name,index)=><div key={name}><span className="admin-list-index">0{index+1}</span><strong>{name}</strong><span className="admin-item-status">DEMO</span></div>):<div className="admin-empty">Todavía no hay registros. Aquí aparecerán los datos cuando conectemos la base de datos.</div>}</div></div></>
+ return <><div className="admin-page-head"><span>INICIO / {item.label.toUpperCase()}</span><h1>{item.label}</h1><p>{item.description}</p></div>
+ <div className="admin-card"><div className="admin-card-head"><h2>{item.label}</h2><p>Selecciona una sección del menú de administración para continuar.</p></div></div></>;
 }
