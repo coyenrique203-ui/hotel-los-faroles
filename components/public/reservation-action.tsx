@@ -12,7 +12,9 @@ function externalBookingLink(raw:string|undefined|null,arrival:string,departure:
   // Cloudbeds Booking Engine Plus admite fechas y huéspedes en la URL pública.
   if(url.hostname==='hotels.cloudbeds.com'&&/^\\/(?:[a-z]{2}\\/)?reservation\\//i.test(url.pathname)){
    if(arrival)url.searchParams.set('checkin',arrival);
+   else url.searchParams.delete('checkin');
    if(departure)url.searchParams.set('checkout',departure);
+   else url.searchParams.delete('checkout');
    url.searchParams.set('guests',String(guests));
    // Los enlaces de prueba pueden traer filtros anteriores: conservamos solo los actuales.
    url.searchParams.delete('adults');
