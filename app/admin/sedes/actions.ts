@@ -12,32 +12,33 @@ const clean=(form:FormData,key:string,max:number)=>{
 
 export async function createSedeAction(formData:FormData){
  const admin=await requireAdmin();
- if(admin.rol!=='general')redirect('/admin/sedes?status=denegado');
  const nombre=clean(formData,'nombre',150);
  const tipo=clean(formData,'tipo',30);
+ const listing=tipo==='restaurante'?'/admin/restaurante':tipo==='eventos'?'/admin/eventos':'/admin/sedes';
+ if(admin.rol!=='general')redirect(listing+'?status=denegado');
  const direccion=clean(formData,'direccion',500);
  const maps=clean(formData,'google_maps_url',2000);
- if(maps&&!/^https:\/\/(maps\.app\.goo\.gl|www\.google\.com|google\.com)\//.test(maps))redirect('/admin/sedes?status=invalid');
- if(nombre.length<3||!['hotel','restaurante','eventos'].includes(tipo))redirect('/admin/sedes?status=invalid');
+ if(maps&&!/^https:\/\/(maps\.app\.goo\.gl|www\.google\.com|google\.com)\//.test(maps))redirect(listing+'?status=invalid');
+ if(nombre.length<3||!['hotel','restaurante','eventos'].includes(tipo))redirect(listing+'?status=invalid');
 
  const baseSlug=nombre.normalize('NFD').replace(/[\u0300-\u036f]/g,'')
   .toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,70);
- if(!baseSlug)redirect('/admin/sedes?status=invalid');
+ if(!baseSlug)redirect(listing+'?status=invalid');
  const db=await createClient();
  const {data:existing,error:lookupError}=await db.from('sedes').select('slug').like('slug',`${baseSlug}%`);
- if(lookupError)redirect('/admin/sedes?status=error');
+ if(lookupError)redirect(listing+'?status=error');
  const used=new Set((existing??[]).map(item=>item.slug));
  let slug=baseSlug;
  for(let suffix=2;used.has(slug)&&suffix<1000;suffix++)slug=`${baseSlug}-${suffix}`;
- if(used.has(slug))redirect('/admin/sedes?status=error');
+ if(used.has(slug))redirect(listing+'?status=error');
 
  const {data,error}=await db.from('sedes').insert({
   nombre,slug,tipo,direccion:direccion||null,google_maps_url:maps||null,publicado:false,
  }).select('id').single();
- if(error||!data)redirect('/admin/sedes?status=error');
- revalidatePath('/admin/sedes');
+ if(error||!data)redirect(listing+'?status=error');
+ revalidatePath('/admin/sedes');revalidatePath('/admin/restaurante');revalidatePath('/admin/eventos');
  revalidatePath('/');
- redirect(`/admin/sedes/${data.id}`);
+ redirect(tipo==='restaurante'?`/admin/restaurante/${data.id}`:tipo==='eventos'?`/admin/eventos/${data.id}`:`/admin/sedes/${data.id}`);
 }
 
 export async function updateSedeAction(formData:FormData){
@@ -86,7 +87,8 @@ export async function updateSedeAction(formData:FormData){
    publicado:formData.get('publicado')==='on',
  }).eq('id',id).select('id').maybeSingle();
  if(error||!data)redirect(fail('error'));
- revalidatePath('/admin/sedes');revalidatePath(`/admin/sedes/${id}`);
+ revalidatePath('/admin/sedes');revalidatePath('/admin/restaurante');revalidatePath('/admin/eventos');
+ revalidatePath(`/admin/sedes/${id}`);revalidatePath(`/admin/restaurante/${id}`);revalidatePath(`/admin/eventos/${id}`);
  revalidatePath('/');
  redirect(fail('ok'));
 }
