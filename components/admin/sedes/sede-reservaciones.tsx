@@ -3,6 +3,7 @@ import type {ReservaConfig,ReservaTipo} from '@/lib/admin/reservaciones';
 import {saveReservasSede} from '@/app/admin/sedes/reservaciones-actions';
 import {FormSubmitButton} from '@/components/admin/shared/form-submit-button';
 import '@/styles/sede-reservaciones.css';
+import {BookingEngineUrlField} from './booking-engine-url-field';
 
 export function SedeReservaciones({sede,config,tipos,status}:{sede:Sede;config:ReservaConfig|null;tipos:ReservaTipo[];status?:string}){
  return <section className="admin-card sede-reservas-card">
@@ -18,11 +19,11 @@ export function SedeReservaciones({sede,config,tipos,status}:{sede:Sede;config:R
    </div>
    <div className="sede-form-grid">
     <label className="sede-field"><span>Número de WhatsApp</span><input name="whatsapp_numero" defaultValue={config?.whatsapp_numero??sede.whatsapp??''} placeholder="50212345678" inputMode="tel" maxLength={30}/><small>Con código de país. Ejemplo: 50212345678.</small></label>
-    <label className="sede-field"><span>URL del sistema externo (HTTPS)</span><input name="url_externa" type="url" defaultValue={config?.url_externa??''} placeholder="https://reservas.ejemplo.com/hotel" maxLength={2000}/><small>Utiliza la dirección oficial del proveedor.</small></label>
+    <BookingEngineUrlField initialUrl={config?.url_externa??''}/>
    </div>
    <p className="reserva-message-note">El mensaje de WhatsApp se creará automáticamente con el nombre del establecimiento, la habitación consultada y los datos que el visitante complete en el formulario de la web pública.</p>
    {sede.tipo==='hotel'&&<div className="reserva-room-links"><h3>Enlaces por tipo de habitación</h3><p>Si el sistema externo ofrece enlaces directos, coloca uno por categoría. Si se deja vacío, se usará el enlace general.</p>{tipos.length?<div className="reserva-room-fields">{tipos.map(tipo=><label className="sede-field" key={tipo.id}><span>{tipo.nombre}</span><input type="url" name={`tipo_${tipo.id}`} maxLength={2000} defaultValue={tipo.url_externa??''} placeholder="https://reservas.ejemplo.com/habitacion"/></label>)}</div>:<p>Aún no hay tipos registrados. Puedes crearlos en Habitaciones.</p>}</div>}
-   <div className="sede-actions"><FormSubmitButton pendingText="Guardando reservaciones...">Guardar configuración</FormSubmitButton><span>Conectaremos los botones públicos en el siguiente paso.</span></div>
+   <div className="sede-actions"><FormSubmitButton pendingText="Guardando reservaciones...">Guardar configuración</FormSubmitButton><span>Los cambios se aplicarán a los botones de reserva de este hotel.</span></div>
   </form>
  </section>;
 }
