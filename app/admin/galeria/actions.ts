@@ -60,37 +60,104 @@ export async function uploadGalleryImage(form:FormData){
  redirect(url(sedeId,'subida',back));
 }
 
+// Lotes reducidos para evitar solicitudes excesivas y sobrecarga de memoria del servidor.
+const MAX_BATCH_FILES=6;
+const MAX_BATCH_BYTES=24*1024*1024;
+function galleryReturn(sede:{id:number;tipo:string},status:string,returnTo?:FormDataEntryValue|null){
+ if(returnTo==='sede'){
+  const section=sede.tipo==='restaurante'?'restaurante':sede.tipo==='eventos'?'eventos':'sedes';
+  return `/admin/${section}/${sede.id}?tab=fotos&status=${status}`;
+ }
+ return url(sede.id,status,returnTo);
+}
+
+export async function uploadGalleryImages(form:FormData){
+ const sedeId=Number(form.get('sede_id'));
+ const sede=await authorize(sedeId);
+ const back=form.get('return_to');
+ const files=form.getAll('imagenes').filter((f):f is File=>f instanceof File&&f.size>0);
+ const invalid=()=>galleryReturn(sede,'archivo',back);
+ if(!files.length||files.length>MAX_BATCH_FILES||files.reduce((total,file)=>total+file.size,0)>MAX_BATCH_BYTES)redirect(invalid());
+ const checked:{file:File;bytes:Uint8Array}[]=[];
+ for(const file of files){
+  if(file.size>MAX_BYTES||!formats[file.type])redirect(invalid());
+  const bytes=new Uint8Array(await file.arrayBuffer());
+  if(!verifyBytes(bytes,file.type))redirect(invalid());
+  checked.push({file,bytes});
+ }
+ const r2=getR2();
+ if(!r2)redirect(galleryReturn(sede,'config',back));
+ const db=await createClient();
+ const {data:featured,error:featuredError}=await db.from('imagenes').select('id').eq('sede_id',sedeId).eq('destacada',true).limit(1);
+ if(featuredError)redirect(galleryReturn(sede,'db',back));
+ const {data:last,error:orderError}=await db.from('imagenes').select('orden').eq('sede_id',sedeId).order('orden',{ascending:false}).limit(1).maybeSingle();
+ if(orderError)redirect(galleryReturn(sede,'db',back));
+ const title=optional(form,'titulo',150),caption=optional(form,'texto_alternativo',255);
+ const uploaded:{key:string;url:string;file:File}[]=[];
+ try{
+  for(const {file,bytes} of checked){
+   const key=`sedes/${sede.slug}/${crypto.randomUUID()}.${formats[file.type]}`;
+   await r2.upload(key,bytes,file.type);
+   uploaded.push({key,url:r2.publicUrl(key),file});
+  }
+ }catch{
+  for(const item of uploaded)try{await r2.remove(item.key);}catch{}
+  redirect(galleryReturn(sede,'r2',back));
+ }
+ const makeFeatured=!featured?.length;
+ const {error}=await db.from('imagenes').insert(uploaded.map((item,index)=>({
+  sede_id:sedeId,tipo_habitacion_id:null,titulo:title||null,
+  texto_alternativo:caption||null,nombre_archivo:item.file.name.slice(0,255),
+  clave_r2:item.key,url_publica:item.url,
+  destacada:makeFeatured&&index===0,publicada:true,orden:(last?.orden??0)+index+1
+ })));
+ if(error){
+  for(const item of uploaded)try{await r2.remove(item.key);}catch{}
+  redirect(galleryReturn(sede,'db',back));
+ }
+ if(makeFeatured){
+  const {error:coverError}=await db.from('sedes').update({imagen_principal:uploaded[0].url}).eq('id',sedeId);
+  if(coverError)redirect(galleryReturn(sede,'error',back));
+ }
+ revalidatePath('/admin/galeria');
+ revalidatePath(`/admin/sedes/${sedeId}`);
+ revalidatePath(`/admin/restaurante/${sedeId}`);
+ revalidatePath(`/admin/eventos/${sedeId}`);
+ revalidatePath('/');revalidatePath(`/${sede.slug}`);
+ redirect(galleryReturn(sede,'subida',back));
+}
+
 export async function changeGalleryImage(form:FormData){
  const back=form.get('return_to');
- const sedeId=Number(form.get('sede_id'));await authorize(sedeId);
+ const sedeId=Number(form.get('sede_id'));const sede=await authorize(sedeId);
  const imageId=Number(form.get('imagen_id'));
- if(!Number.isSafeInteger(imageId)||imageId<1)redirect(url(sedeId,'error',back));
+ if(!Number.isSafeInteger(imageId)||imageId<1)redirect(galleryReturn(sede,'error',back));
  const db=await createClient();
  const {data:existing}=await db.from('imagenes').select('id,url_publica,clave_r2').eq('sede_id',sedeId).eq('id',imageId).maybeSingle();
- if(!existing)redirect(url(sedeId,'denegado',back));
+ if(!existing)redirect(galleryReturn(sede,'denegado',back));
  const operation=form.get('operacion');
  if(operation==='destacar'){
   const {error:clearError}=await db.from('imagenes').update({destacada:false}).eq('sede_id',sedeId).eq('destacada',true);
-  if(clearError)redirect(url(sedeId,'error',back));
+  if(clearError)redirect(galleryReturn(sede,'error',back));
   const {error}=await db.from('imagenes').update({destacada:true,publicada:true}).eq('id',imageId).eq('sede_id',sedeId);
-  if(error)redirect(url(sedeId,'error',back));
+  if(error)redirect(galleryReturn(sede,'error',back));
   const {error:sedeError}=await db.from('sedes').update({imagen_principal:existing.url_publica}).eq('id',sedeId);
-  if(sedeError)redirect(url(sedeId,'error',back));
+  if(sedeError)redirect(galleryReturn(sede,'error',back));
  }else if(operation==='ocultar'||operation==='mostrar'){
   const {error}=await db.from('imagenes').update({publicada:operation==='mostrar'}).eq('id',imageId).eq('sede_id',sedeId);
-  if(error)redirect(url(sedeId,'error',back));
+  if(error)redirect(galleryReturn(sede,'error',back));
  }else if(operation==='eliminar'){
   const r2=getR2();
-  if(!r2)redirect(url(sedeId,'config',back));
+  if(!r2)redirect(galleryReturn(sede,'config',back));
   const {error}=await db.from('imagenes').delete().eq('id',imageId).eq('sede_id',sedeId);
-  if(error)redirect(url(sedeId,'error',back));
+  if(error)redirect(galleryReturn(sede,'error',back));
   try{await r2.remove(existing.clave_r2);}catch{
    // La fila se eliminó, pero podría quedar un objeto huérfano en R2.
-   revalidatePath('/admin/galeria');redirect(url(sedeId,'r2delete',back));
+   revalidatePath('/admin/galeria');redirect(galleryReturn(sede,'r2delete',back));
   }
   const {data:sede}=await db.from('sedes').select('imagen_principal').eq('id',sedeId).maybeSingle();
   if(sede?.imagen_principal===existing.url_publica)await db.from('sedes').update({imagen_principal:null}).eq('id',sedeId);
- }else redirect(url(sedeId,'error',back));
+ }else redirect(galleryReturn(sede,'error',back));
  revalidatePath('/admin/galeria');revalidatePath(`/admin/sedes/${sedeId}`);revalidatePath('/');
- redirect(url(sedeId,'guardado',back));
+ redirect(galleryReturn(sede,'guardado',back));
 }
