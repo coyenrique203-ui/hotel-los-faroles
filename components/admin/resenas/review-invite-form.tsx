@@ -14,6 +14,6 @@ export function ReviewInviteForm({sedeId,kind='hotel'}:{sedeId:number;kind?:'hot
   <p>Genera el enlace únicamente después de que el personal confirme que la persona visitó el establecimiento o asistió al evento. Será válido durante 15 días y para una sola reseña.</p>
   <button type="submit" disabled={pending}>{pending?'Generando...':'Generar enlace privado'}</button>
   {result.error&&<p className="sede-error" role="alert">{result.error}</p>}
-  {result.url&&<div className="review-generated-link" role="status"><strong>Enlace generado (cópialo ahora; no volverá a mostrarse)</strong><input readOnly aria-label="Enlace de reseña" value={link}/><a target="_blank" rel="noopener noreferrer" href={'https://wa.me/?text='+encodeURIComponent('Gracias por hospedarte con nosotros. Comparte tu experiencia: '+link)}>Compartir por WhatsApp ↗</a></div>}
+  {result.url&&<div className="review-generated-link" role="status"><strong>Enlace generado (cópialo ahora; no volverá a mostrarse)</strong><input readOnly aria-label="Enlace de reseña" value={link}/><a target="_blank" rel="noopener noreferrer" href={'https://wa.me/?text='+encodeURIComponent((kind==='hotel'?'Gracias por hospedarte con nosotros. ':'Gracias por visitarnos. ' )+'Comparte tu experiencia: '+link)}>Compartir por WhatsApp ↗</a></div>}
  </form>;
 }
