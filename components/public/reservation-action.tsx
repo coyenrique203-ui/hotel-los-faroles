@@ -9,7 +9,16 @@ function externalBookingLink(raw:string|undefined|null,arrival:string,departure:
  try{
   const url=new URL(raw);
   if(url.protocol!=='https:'||url.username||url.password)return null;
-  // El formato de parámetros solo está confirmado para el ejemplo SimpleBooking.
+  // Cloudbeds Booking Engine Plus admite fechas y huéspedes en la URL pública.
+  if(url.hostname==='hotels.cloudbeds.com'&&/^\\/(?:[a-z]{2}\\/)?reservation\\//i.test(url.pathname)){
+   if(arrival)url.searchParams.set('checkin',arrival);
+   if(departure)url.searchParams.set('checkout',departure);
+   url.searchParams.set('guests',String(guests));
+   // Los enlaces de prueba pueden traer filtros anteriores: conservamos solo los actuales.
+   url.searchParams.delete('adults');
+   url.searchParams.delete('kids');
+  }
+  // También admitimos enlaces de SimpleBooking para otras sedes.
   if(url.hostname==='simplebooking.it'||url.hostname.endsWith('.simplebooking.it')){
    if(arrival)url.searchParams.set('in',arrival);
    if(departure)url.searchParams.set('out',departure);
