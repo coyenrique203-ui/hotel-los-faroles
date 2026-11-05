@@ -23,7 +23,7 @@ export async function createActivity(form:FormData){
  const descripcion=String(form.get('descripcion')??'').trim().slice(0,1600)||null;
  const fecha=String(form.get('fecha_evento')??'');
  const files=form.getAll('fotos').filter((f):f is File=>f instanceof File&&f.size>0);
- if(titulo.length<3||(fecha&&!/^\d{4}-\d{2}-\d{2}$/.test(fecha))||files.length>8||!files.length)redirect(back(id,'invalid'));
+ if(titulo.length<3||(fecha&&!/^\d{4}-\d{2}-\d{2}$/.test(fecha))||files.length>8||!files.length||files.reduce((sum,file)=>sum+file.size,0)>24*1024*1024)redirect(back(id,'invalid'));
  const checked:{file:File;bytes:Uint8Array}[]=[];
  for(const file of files){
   if(file.size>8*1024*1024||!formats[file.type])redirect(back(id,'invalid'));
