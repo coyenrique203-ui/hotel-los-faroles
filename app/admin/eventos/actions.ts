@@ -13,7 +13,7 @@ async function authorized(id:number){
  if(!sede)redirect('/admin/eventos?status=denegado');
  return sede;
 }
-function back(id:number,status:string){return '/admin/eventos?sede='+id+'&status='+status;}
+function back(id:number,status:string){return '/admin/eventos/'+id+'?tab=actividades&status='+status;}
 function valid(bytes:Uint8Array,mime:string){
  return mime==='image/jpeg'?bytes[0]===255&&bytes[1]===216&&bytes[2]===255:mime==='image/png'?bytes[0]===137&&bytes[1]===80&&bytes[2]===78&&bytes[3]===71:mime==='image/webp'?new TextDecoder().decode(bytes.slice(0,4))==='RIFF'&&new TextDecoder().decode(bytes.slice(8,12))==='WEBP':false;
 }
@@ -49,7 +49,7 @@ export async function createActivity(form:FormData){
   for(const image of images)try{await r2.remove(image.key);}catch{}
   redirect(back(id,'error'));
  }
- revalidatePath('/admin/eventos');revalidatePath('/eventos');revalidatePath('/sedes/'+sede.slug);
+ revalidatePath('/admin/eventos');revalidatePath('/admin/eventos/'+id);revalidatePath('/eventos');revalidatePath('/sedes/'+sede.slug);
  redirect(back(id,'created'));
 }
 export async function changeActivity(form:FormData){
