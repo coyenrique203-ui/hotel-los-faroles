@@ -53,11 +53,6 @@ export async function updateSedeAction(formData:FormData){
  const telefono2=clean(formData,'telefono_2',50);
  const telefono3=clean(formData,'telefono_3',50);
  const googleMapsUrl=clean(formData,'google_maps_url',2000);
- const ratingText=clean(formData,'google_rating',10),countText=clean(formData,'google_reviews_count',15);
- const rating=ratingText?Number(ratingText):null,count=countText?Number(countText):null;
- const validReviews=(rating===null||Number.isFinite(rating)&&rating>=1&&rating<=5)
-   &&(count===null||Number.isSafeInteger(count)&&count>=0)
-   &&((rating===null)===(count===null));
  let validMaps=true;
  if(googleMapsUrl){
   try{
@@ -69,7 +64,7 @@ export async function updateSedeAction(formData:FormData){
   }catch{validMaps=false;}
  }
  if(!nombre||nombre.length<2|| (email&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))||
-    !validMaps||!validReviews||[telefono,telefono2,telefono3,whatsapp].some(v=>/[^+\d ()-]/.test(v)))redirect(fail('error'));
+    !validMaps||[telefono,telefono2,telefono3,whatsapp].some(v=>/[^+\d ()-]/.test(v)))redirect(fail('error'));
 
  const supabase=await createClient();
  // Comprobación explícita; la política RLS también filtra esta lectura y la escritura.
@@ -83,7 +78,7 @@ export async function updateSedeAction(formData:FormData){
    nombre,descripcion:clean(formData,'descripcion',3000)||null,
    direccion:clean(formData,'direccion',500)||null,
    telefono:telefono||null,telefonos_adicionales:[telefono2,telefono3].filter(Boolean),
-   google_maps_url:googleMapsUrl||null,google_rating:rating,google_reviews_count:count,google_reviews_checked_at:rating!==null?new Date().toISOString():null,whatsapp:whatsapp||null,email:email||null,
+   google_maps_url:googleMapsUrl||null,whatsapp:whatsapp||null,email:email||null,
    publicado:formData.get('publicado')==='on',
  }).eq('id',id).select('id').maybeSingle();
  if(error||!data)redirect(fail('error'));
