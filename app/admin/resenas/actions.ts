@@ -16,12 +16,12 @@ export async function createReviewInvitation(_previous:InviteResult,form:FormDat
  const fecha=String(form.get('fecha_salida')??'');
  const sedes=await getSedesForAdmin(admin);
  if(!Number.isSafeInteger(sede)||!sedes.some(s=>s.id===sede)||nombre.length<2||!/^\d{4}-\d{2}-\d{2}$/.test(fecha)){
-  return fail('Completa el nombre, la sede y una fecha de salida válida.');
+  return fail('Completa el nombre, el establecimiento y la fecha de visita o evento.');
  }
  const salida=new Date(fecha+'T12:00:00Z');
  const hoy=new Date();
  if(Number.isNaN(salida.getTime())||salida.getTime()>hoy.getTime()||hoy.getTime()-salida.getTime()>90*86400000){
-  return fail('La salida debe haber ocurrido durante los últimos 90 días.');
+  return fail('La visita o actividad debe haber ocurrido durante los últimos 90 días.');
  }
  const token=randomBytes(32).toString('hex');
  const hash=createHash('sha256').update(token).digest('hex');
@@ -48,6 +48,7 @@ export async function moderateReview(form:FormData){
   estado,revisado_en:new Date().toISOString(),revisado_por:admin.id,
  }).eq('id',id).eq('sede_id',sede).eq('estado','pendiente');
  revalidatePath('/admin/resenas');
+ revalidatePath('/admin/restaurante/'+sede);revalidatePath('/admin/eventos/'+sede);
  revalidatePath('/coban');revalidatePath('/antigua');
  const slug=sedes.find(s=>s.id===sede)?.slug;
  if(slug)revalidatePath('/sedes/'+slug);
