@@ -31,3 +31,20 @@
 .social-event-visible input{accent-color:#315c47;width:18px;height:18px}
 .social-event-note{color:#819087;font-size:.82rem}
 @media(max-width:680px){.social-event-grid{grid-template-columns:1fr}.social-composer-footer{align-items:stretch;flex-direction:column}.social-composer-footer button{width:100%}}
+
+.social-upload-drop:disabled{opacity:.57;cursor:not-allowed}
+.social-clear-selection{justify-self:start;border:0;background:transparent;padding:5px 0;color:#65796d;text-decoration:underline;cursor:pointer;font:inherit;font-size:.85rem}
+.social-event-image button:hover{background:#ffece8;color:#a32d21}
+.upload-processing-overlay{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;background:rgba(21,41,33,.62);backdrop-filter:blur(7px);padding:24px;animation:upload-fade-in .2s ease-out}
+.upload-processing-card{width:min(100%,410px);box-sizing:border-box;padding:40px 34px 32px;text-align:center;border-radius:23px;background:#fafbf8;box-shadow:0 26px 90px #001a102b;color:#243d33}
+.upload-processing-card strong{display:block;margin-top:18px;font-size:1.27rem;font-weight:700}
+.upload-processing-card p{font-size:.94rem;line-height:1.55;color:#6b7c72;margin:12px 0 22px}
+.upload-processing-card small{display:block;margin-top:15px;color:#86968c;font-size:.78rem}
+.upload-processing-icon{position:relative;width:74px;height:74px;display:grid;place-items:center;margin:0 auto;color:#2d634b;background:#e5f0e7;border-radius:50%}
+.upload-processing-spinner{position:absolute;inset:13px;animation:upload-spin 1.3s linear infinite;stroke-dasharray:11 6;opacity:.8}
+.upload-processing-track{height:5px;border-radius:99px;overflow:hidden;background:#e5ece6}
+.upload-processing-track span{display:block;height:100%;width:40%;border-radius:99px;background:#4c8061;animation:upload-slide 1.8s ease-in-out infinite}
+@keyframes upload-spin{to{transform:rotate(360deg)}}
+@keyframes upload-slide{0%{transform:translateX(-110%)}50%{transform:translateX(170%)}100%{transform:translateX(340%)}}
+@keyframes upload-fade-in{from{opacity:0}to{opacity:1}}
+@media(prefers-reduced-motion:reduce){.upload-processing-overlay,.upload-processing-spinner,.upload-processing-track span{animation:none}}
