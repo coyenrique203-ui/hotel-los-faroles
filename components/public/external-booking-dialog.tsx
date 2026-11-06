@@ -36,7 +36,7 @@ export function ExternalBookingDialog({url,venueName,className='',children,initi
  const [departure,setDeparture]=useState('');
  const [guests,setGuests]=useState(Math.max(1,initialGuests));
  const today=localDate();
- const begin=()=>{setArrival(initialDate>=today?initialDate:today);setDeparture(initialEndDate>(initialDate>=today?initialDate:today)?initialEndDate:localDate(1));setGuests(Math.max(1,initialGuests));setOpen(true);};
+ const begin=()=>{const start=initialDate>=today?initialDate:today;const next=new Date(Date.parse(`${start}T12:00:00Z`)+86400000).toISOString().slice(0,10);setArrival(start);setDeparture(initialEndDate>start?initialEndDate:next);setGuests(Math.max(1,initialGuests));setOpen(true);};
  const submit=(event:FormEvent<HTMLFormElement>)=>{
   event.preventDefault();
   if(arrival<today||departure<=arrival)return;
