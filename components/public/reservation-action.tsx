@@ -3,43 +3,16 @@ import {useState,type ReactNode} from 'react';
 import {ArrowUpRight,CalendarDays,Minus,Plus,X} from 'lucide-react';
 import type {PublicReservationConfig} from '@/lib/public-reservations';
 import '@/styles/reservation-action.css';
+import {ExternalBookingDialog} from './external-booking-dialog';
 
-function externalBookingLink(raw:string|undefined|null,arrival:string,departure:string,guests:number){
- if(!raw)return null;
- try{
-  const url=new URL(raw);
-  if(url.protocol!=='https:'||url.username||url.password)return null;
-  // Cloudbeds Booking Engine Plus admite fechas y huéspedes en la URL pública.
-  if(url.hostname==='hotels.cloudbeds.com'&&url.pathname.split('/').includes('reservation')){
-   if(arrival)url.searchParams.set('checkin',arrival);
-   else url.searchParams.delete('checkin');
-   if(departure)url.searchParams.set('checkout',departure);
-   else url.searchParams.delete('checkout');
-   url.searchParams.set('guests',String(guests));
-   // Los enlaces de prueba pueden traer filtros anteriores: conservamos solo los actuales.
-   url.searchParams.delete('adults');
-   url.searchParams.delete('kids');
-  }
-  // También admitimos enlaces de SimpleBooking para otras sedes.
-  if(url.hostname==='simplebooking.it'||url.hostname.endsWith('.simplebooking.it')){
-   if(arrival)url.searchParams.set('in',arrival);
-   if(departure)url.searchParams.set('out',departure);
-   url.searchParams.set('guests',Array.from({length:guests},()=> 'A').join(','));
-  }
-  return url.toString();
- }catch{return null;}
-}
-
-export function ReservationAction({config,hotel,venueName,roomName,roomId,className='',children,initialDate='',initialEndDate='',initialGuests=2,requireDates=false}:{config:PublicReservationConfig|null;hotel:boolean;venueName:string;roomName?:string;roomId?:number;className?:string;children:ReactNode;initialDate?:string;initialEndDate?:string;initialGuests?:number;requireDates?:boolean}){
+export function ReservationAction({config,hotel,venueName,roomName,className='',children,initialDate='',initialEndDate='',initialGuests=2,requireDates: _requireDates=false}:{config:PublicReservationConfig|null;hotel:boolean;venueName:string;roomName?:string;roomId?:number;className?:string;children:ReactNode;initialDate?:string;initialEndDate?:string;initialGuests?:number;requireDates?:boolean}){
  const [open,setOpen]=useState(false);
  const [name,setName]=useState('');const [date,setDate]=useState('');const [endDate,setEndDate]=useState('');
  const [guests,setGuests]=useState(initialGuests);const [phone,setPhone]=useState('');const [note,setNote]=useState('');
- const link=roomId?config?.roomLinks[roomId]||config?.url_externa:config?.url_externa;
+ const link=config?.url_externa;
  const validExternal=(value:string|undefined|null)=>{if(!value)return false;try{const u=new URL(value);return u.protocol==='https:'&&!u.username&&!u.password;}catch{return false;}};
  if(config?.metodo==='externo'){
-  if(requireDates&&(!initialDate||!initialEndDate||initialEndDate<=initialDate))return <button className={className} type="button" disabled title="Selecciona fechas válidas de llegada y salida">{children}</button>;
-  const target=externalBookingLink(link,initialDate,initialEndDate,initialGuests);
-  return validExternal(target)?<a className={className} href={target!} target="_blank" rel="noopener noreferrer">{children}</a>:<span className="reservation-unavailable">Reservaciones próximamente</span>;
+  return validExternal(link)?<ExternalBookingDialog url={link!} venueName={venueName} className={className} initialDate={initialDate} initialEndDate={initialEndDate} initialGuests={initialGuests}>{children}</ExternalBookingDialog>:<span className="reservation-unavailable">Reservaciones próximamente</span>;
  }
  const number=(config?.whatsapp_numero||'').replace(/\D/g,'');
  if(config?.metodo!=='whatsapp'||number.length<8)return <span className="reservation-unavailable">Reservaciones próximamente</span>;
