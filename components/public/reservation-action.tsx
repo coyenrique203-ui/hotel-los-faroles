@@ -2,6 +2,18 @@
 import {useState,type ReactNode} from 'react';
 import {ArrowUpRight,CalendarDays,Minus,Plus,X} from 'lucide-react';
 import type {PublicReservationConfig} from '@/lib/public-reservations';
+function guatemalaToday(){
+ const parts=new Intl.DateTimeFormat('en-US',{timeZone:'America/Guatemala',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());
+ const value=(type:string)=>parts.find(part=>part.type===type)?.value??'';
+ return `${value('year')}-${value('month')}-${value('day')}`;
+}
+function followingDay(iso:string){return new Date(Date.parse(`${iso}T12:00:00Z`)+86400000).toISOString().slice(0,10);}
+function openWhatsApp(number:string,message:string){
+ const target=`https://wa.me/${number}?text=${encodeURIComponent(message)}`;
+ const opened=window.open(target,'_blank');
+ if(!opened)window.location.assign(target);
+}
+
 import '@/styles/reservation-action.css';
 import {ExternalBookingDialog} from './external-booking-dialog';
 
@@ -18,19 +30,19 @@ export function ReservationAction({config,hotel,venueName,roomName,className='',
  if(config?.metodo!=='whatsapp'||number.length<8)return <span className="reservation-unavailable">Reservaciones próximamente</span>;
  const submit=(event:React.FormEvent<HTMLFormElement>)=>{
   event.preventDefault();
-  if(hotel&&endDate<=date)return;
-  const lines=[`Hola, quisiera consultar una reserva en ${venueName}.`,roomName?`Habitación: ${roomName}`:null,`Nombre: ${name}`,hotel?`Llegada: ${date}`:`Fecha solicitada: ${date}`,hotel?`Salida: ${endDate}`:null,`Personas: ${guests}`,phone?`Teléfono: ${phone}`:null,note?`Comentarios: ${note}`:null].filter(Boolean);
-  window.open(`https://wa.me/${number}?text=${encodeURIComponent(lines.join('\n'))}`,'_blank','noopener,noreferrer');
+  if(!name.trim()||!date||date<guatemalaToday()||(hotel&&(!endDate||endDate<=date)))return;
+  const lines=[`Hola, quisiera consultar una reserva en ${venueName}.`,roomName?`Habitación: ${roomName}`:null,`Nombre: ${name.trim()}`,hotel?`Llegada: ${date}`:`Fecha solicitada: ${date}`,hotel?`Salida: ${endDate}`:null,`Personas: ${guests}`,phone?`Teléfono: ${phone}`:null,note?`Comentarios: ${note}`:null].filter(Boolean);
+  openWhatsApp(number,lines.join('\n'));
   setOpen(false);
  };
- const today=new Date().toLocaleDateString('en-CA');
+ const today=guatemalaToday();
  return <>
-  <button type="button" className={className} onClick={()=>{setDate(initialDate);setEndDate(initialEndDate);setGuests(initialGuests);setOpen(true);}}>{children}</button>
+  <button type="button" className={className} onClick={()=>{const start=initialDate>=today?initialDate:today;setDate(start);setEndDate(initialEndDate>start?initialEndDate:followingDay(start));setGuests(Math.max(1,initialGuests));setOpen(true);}}>{children}</button>
   {open&&<div className="reservation-modal-backdrop" onMouseDown={e=>{if(e.target===e.currentTarget)setOpen(false);}}><div className="reservation-modal" role="dialog" aria-modal="true" aria-labelledby="reservation-title">
    <div className="reservation-modal-heading"><div><span>LOS FAROLES · CONSULTA</span><h2 id="reservation-title">Solicitar {hotel?'una habitación':'información'}</h2><p>{venueName}{roomName?` · ${roomName}`:''}</p></div><button type="button" onClick={()=>setOpen(false)} aria-label="Cerrar formulario"><X size={22}/></button></div>
    <form onSubmit={submit} className="reservation-modal-form">
     <label>Nombre completo<input value={name} onChange={e=>setName(e.target.value)} maxLength={120} required placeholder="Tu nombre" autoFocus/></label>
-    <div className="reservation-modal-dates"><label>{hotel?'Fecha de llegada':'Fecha deseada'}<input type="date" value={date} min={today} onChange={e=>setDate(e.target.value)} required/></label>{hotel&&<label>Fecha de salida<input type="date" value={endDate} min={date||today} onChange={e=>setEndDate(e.target.value)} required/></label>}</div>
+    <div className="reservation-modal-dates"><label>{hotel?'Fecha de llegada':'Fecha deseada'}<input type="date" value={date} min={today} onChange={e=>{setDate(e.target.value);if(endDate&&endDate<=e.target.value)setEndDate('');}} required/></label>{hotel&&<label>Fecha de salida<input type="date" value={endDate} min={date||today} onChange={e=>setEndDate(e.target.value)} required/></label>}</div>
     <label>Cantidad de personas<div className="reservation-guests"><button type="button" onClick={()=>setGuests(Math.max(1,guests-1))} aria-label="Restar persona"><Minus size={16}/></button><span>{guests} {guests===1?'persona':'personas'}</span><button type="button" onClick={()=>setGuests(Math.min(50,guests+1))} aria-label="Agregar persona"><Plus size={16}/></button></div></label>
     <label>Teléfono de contacto (opcional)<input type="tel" value={phone} maxLength={40} onChange={e=>setPhone(e.target.value)} placeholder="+502 ..."/></label>
     <label>Comentario adicional (opcional)<textarea value={note} maxLength={350} rows={2} onChange={e=>setNote(e.target.value)} placeholder="¿Algo que debamos saber?"/></label>
