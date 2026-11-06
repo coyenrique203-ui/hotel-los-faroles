@@ -19,7 +19,9 @@ export function BookingSearch({initialDestination='Cobán, Alta Verapaz',config,
   const selected=available?.find(item=>item.label===destination);
   const activeConfig=selected?.config??config;
   const activeName=selected?.name??venueName;
-  const today=new Date().toLocaleDateString('en-CA');
+  const dateParts=new Intl.DateTimeFormat('en-US',{timeZone:'America/Guatemala',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());
+  const dateValue=(type:string)=>dateParts.find(part=>part.type===type)?.value??'';
+  const today=`${dateValue('year')}-${dateValue('month')}-${dateValue('day')}`;
   return <section className="booking" id="reservar"><div className="booking-label"><span>TU PRÓXIMA ESCAPADA</span><strong>Encuentra tu lugar.</strong></div>
     <label>DESTINO <div className="select"><select value={destination} onChange={e=>setDestination(e.target.value)} disabled={!available&&Boolean(config)}>{available?available.map(item=><option key={item.label}>{item.label}</option>):config?<option>{initialDestination}</option>:<><option>Cobán, Alta Verapaz</option><option>Antigua Guatemala</option></>}</select><ChevronDown size={16}/></div></label>
     <label>LLEGADA <input aria-label="Fecha de llegada" type="date" min={today} value={arrival} onChange={e=>{setArrival(e.target.value);if(departure&&departure<=e.target.value)setDeparture('');}}/></label><label>SALIDA <input aria-label="Fecha de salida" type="date" min={arrival||today} value={departure} onChange={e=>setDeparture(e.target.value)}/></label>
