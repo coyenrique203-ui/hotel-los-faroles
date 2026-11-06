@@ -27,6 +27,7 @@ export function ExperienceWhatsApp({type,phone,venueName,children,className='sol
   const lines=[`Hola, quisiera consultar ${restaurant?'disponibilidad de una mesa':'disponibilidad del salón para un evento'} en ${venueName}.`,`A nombre de: ${name.trim()}`,`Fecha: ${date}`,restaurant?`Hora: ${hour}`:null,`${restaurant?'Personas':'Invitados estimados'}: ${guests}`,!restaurant&&eventType?`Tipo de evento: ${eventType}`:null,phoneContact?`Teléfono: ${phoneContact}`:null,note?`Comentarios: ${note}`:null,'Quedo pendiente de confirmación.'].filter(Boolean);
   openWhatsApp(digits,lines.join('\n'));
   setOpen(false);
+  setName('');setDate('');setHour('');setGuests(2);setPhoneContact('');setEventType('');setNote('');
  };
  return <><button type="button" className={className} onClick={()=>setOpen(true)}>{children}</button>{open&&
  <div className="experience-overlay" onMouseDown={e=>{if(e.target===e.currentTarget)setOpen(false)}}><div className="experience-dialog" role="dialog" aria-modal="true" aria-labelledby="experience-dialog-title">
