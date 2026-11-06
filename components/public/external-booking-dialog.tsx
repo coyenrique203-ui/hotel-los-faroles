@@ -41,7 +41,7 @@ export function ExternalBookingDialog({url,venueName,className='',children,initi
   event.preventDefault();
   if(arrival<today||departure<=arrival)return;
   const target=buildBookingUrl(url,arrival,departure,guests);
-  if(target)window.location.assign(target);
+  if(target)window.open(target,'_blank','noopener,noreferrer');
  };
  return <>
   <button type="button" className={className} onClick={begin}>{children}</button>
