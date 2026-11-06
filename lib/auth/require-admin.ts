@@ -1,4 +1,5 @@
 import { redirect } from 'next/navigation';
+import {cache} from 'react';
 import { createClient } from '@/lib/supabase/server';
 
 export type AdminProfile = {
@@ -8,7 +9,7 @@ export type AdminProfile = {
   activo: boolean;
 };
 
-export async function getAdminProfile(): Promise<AdminProfile | null> {
+export const getAdminProfile=cache(async (): Promise<AdminProfile | null> => {
   const started=performance.now();
   let authenticationMs=0;
   let profileMs=0;
@@ -34,7 +35,7 @@ export async function getAdminProfile(): Promise<AdminProfile | null> {
       console.info(`[rendimiento-admin] autenticacion=${Math.round(authenticationMs)}ms perfil=${Math.round(profileMs)}ms total=${Math.round(performance.now()-started)}ms`);
     }
   }
-}
+});
 
 export async function requireAdmin() {
   const admin = await getAdminProfile();
