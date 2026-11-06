@@ -17,7 +17,7 @@ export function BookingEngineUrlField({initialUrl}:{initialUrl:string}){
   <span>Enlace del motor de reservas</span>
   <input name="url_externa" type="url" value={url} onChange={event=>setUrl(event.target.value)} placeholder="https://hotels.cloudbeds.com/es/reservation/CODIGO/" maxLength={2000}/>
   <small>Pega el enlace del motor de reservas de este hotel. Puede venir con fechas de prueba: nuestra web las sustituirá por las fechas elegidas por el cliente.</small>
-  {status.cloudbeds&&<small style={{display:'flex',alignItems:'center',gap:7,color:'#286247'}}><CheckCircle2 size={16}/> Enlace de Cloudbeds reconocido. Las fechas y los huéspedes se enviarán automáticamente.</small>}
+  {status.cloudbeds&&<small style={{display:'flex',alignItems:'center',gap:7,color:'#254e7c'}}><CheckCircle2 size={16}/> Enlace de Cloudbeds reconocido. Las fechas y los huéspedes se enviarán automáticamente.</small>}
   {!!url&&!status.secure&&<small style={{color:'#b44433'}}>Utiliza una dirección completa que empiece con https://</small>}
   {status.secure&&<a href={url} target="_blank" rel="noopener noreferrer" className="sede-maps-preview" style={{display:'inline-flex',alignItems:'center',gap:6}}>Probar este enlace <ExternalLink size={14}/></a>}
  </label>;

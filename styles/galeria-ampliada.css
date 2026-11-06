@@ -1,12 +1,12 @@
 /* Galería ampliada para restaurantes y salones. Hoteles conservan su presentación. */
 .venue-photo-grid-interactive{position:relative}
-.venue-photo-button{position:relative;display:block;min-width:0;min-height:0;border:0;padding:0;overflow:hidden;cursor:zoom-in;background:#d9ded6;color:white}
+.venue-photo-button{position:relative;display:block;min-width:0;min-height:0;border:0;padding:0;overflow:hidden;cursor:zoom-in;background:#d2d9e2;color:white}
 .venue-photo-button>.photo{position:absolute;inset:0;background-position:center;background-size:cover;transition:transform .45s ease}
 .venue-photo-button:hover>.photo,.venue-photo-button:focus-visible>.photo{transform:scale(1.045)}
 .venue-photo-button:focus-visible{outline:3px solid #bd9c70;outline-offset:3px;z-index:1}
-.venue-photo-zoom{position:absolute;bottom:18px;left:18px;background:#152c25c9;padding:8px 12px;font:600 10px 'Jost',sans-serif;letter-spacing:.1em;opacity:0;transform:translateY(5px);transition:opacity .2s,transform .2s}
+.venue-photo-zoom{position:absolute;bottom:18px;left:18px;background:#182b40c9;padding:8px 12px;font:600 10px 'Jost',sans-serif;letter-spacing:.1em;opacity:0;transform:translateY(5px);transition:opacity .2s,transform .2s}
 .venue-photo-button:hover .venue-photo-zoom,.venue-photo-button:focus-visible .venue-photo-zoom{opacity:1;transform:none}
-.experience-lightbox{position:fixed;inset:0;z-index:2000;background:#0b1513f2;display:flex;align-items:center;justify-content:center;padding:65px 25px 24px;color:#fff}
+.experience-lightbox{position:fixed;inset:0;z-index:2000;background:#101b27f2;display:flex;align-items:center;justify-content:center;padding:65px 25px 24px;color:#fff}
 .experience-lightbox-close{position:absolute;top:17px;right:22px;z-index:2;background:#ffffff1f;border:1px solid #ffffff44;color:white;border-radius:50%;width:44px;height:44px;display:grid;place-items:center;cursor:pointer}
 .experience-lightbox-close:hover{background:#ffffff33}
 .experience-lightbox-stage{display:grid;grid-template-columns:52px minmax(0,1fr) 52px;align-items:center;gap:15px;width:min(100%,1400px);height:100%}
@@ -14,7 +14,7 @@
 .experience-lightbox-stage>button:hover{background:#ffffff30}
 .experience-lightbox-stage>figure{min-width:0;max-width:100%;height:100%;margin:0;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;gap:14px}
 .experience-lightbox-stage img{max-width:100%;max-height:calc(100% - 48px);width:auto;height:auto;object-fit:contain;box-shadow:0 20px 70px #0005}
-.experience-lightbox-stage figcaption{display:flex;justify-content:space-between;align-items:center;gap:35px;width:min(100%,900px);font:400 12px 'Jost',sans-serif;letter-spacing:.04em;color:#ecefe9}
+.experience-lightbox-stage figcaption{display:flex;justify-content:space-between;align-items:center;gap:35px;width:min(100%,900px);font:400 12px 'Jost',sans-serif;letter-spacing:.04em;color:#e8ecf0}
 .experience-lightbox-stage figcaption span{white-space:nowrap;color:#c6aa7b}
 .event-activity-open{display:block;width:100%;height:100%;border:0;background:transparent;text-align:left;padding:0;cursor:zoom-in;color:inherit;font:inherit}
 .event-activity-open:disabled{cursor:default}.event-activity-open:focus-visible{outline:3px solid #bd9c70;outline-offset:-3px}

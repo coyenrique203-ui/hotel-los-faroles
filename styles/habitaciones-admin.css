@@ -1,35 +1,35 @@
-.gallery-venue-tabs a{display:inline-flex;align-items:center;gap:7px}.room-head-row{display:flex;align-items:center;justify-content:space-between;gap:18px}.room-add{font-size:12px;color:#285243;border:1px solid #cbdace;border-radius:6px;padding:10px 15px;display:inline-flex;align-items:center;gap:7px;white-space:nowrap}.room-admin-grid{padding:24px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}.room-admin-card{display:block;border:1px solid #e7ece5;border-radius:9px;overflow:hidden}.room-admin-card>img,.room-empty-photo{width:100%;height:160px;object-fit:cover;background:#edf0eb}.room-empty-photo{display:grid;place-items:center;color:#8a9d8b}.room-admin-card>div:last-child{padding:17px}.room-admin-card h3{font:400 22px 'Playfair Display',serif;margin:7px 0}.room-admin-card p,.room-admin-card strong{font-size:12px;color:#718075}.room-admin-card strong{display:block;color:#375f4a;margin-top:9px}.room-edit-link{margin-top:14px;font-size:11px;font-weight:600;display:flex;gap:7px;align-items:center;color:#456850}.room-empty-copy{color:#819087;font-size:13px;line-height:1.7;padding:20px 0}.room-admin-form{display:grid;gap:21px;padding:28px 30px}.room-admin-form .sede-field select{font:400 14px 'DM Sans',sans-serif;color:#263a31;width:100%;padding:13px 15px;border:1px solid #dce4dc;border-radius:7px;background:#fff;min-height:47px}.room-form-actions{display:flex;gap:20px;align-items:center}.room-form-actions button{padding:14px 24px;background:#254a3d;color:#fff;border:0;border-radius:6px;font-size:13px;cursor:pointer}.room-form-actions button:disabled{opacity:.5;cursor:not-allowed}.room-form-actions>a{font-size:12px;color:#6f8171}.room-unit-list>a{display:flex;align-items:center;gap:18px;padding:18px 30px;border-top:1px solid #eef0ec}.room-unit-list>a:hover{background:#f9faf8}.room-unit-list>a>div{display:grid;gap:6px;flex:1}.room-unit-list strong{font-size:14px}.room-unit-list small{font-size:11px;color:#8b978e}.room-unit-active,.room-unit-inactive{padding:7px 9px;border-radius:5px;background:#e9f3eb;color:#37734f;font-size:11px;text-transform:capitalize}.room-unit-inactive{background:#f8efe6;color:#9d7746}@media(max-width:1100px){.room-admin-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:680px){.room-admin-grid{grid-template-columns:1fr;padding:16px}.room-head-row{align-items:flex-start;flex-direction:column}.room-admin-form{padding:20px}.room-unit-list>a{padding:16px 20px}}
+.gallery-venue-tabs a{display:inline-flex;align-items:center;gap:7px}.room-head-row{display:flex;align-items:center;justify-content:space-between;gap:18px}.room-add{font-size:12px;color:#284669;border:1px solid #c9d2dc;border-radius:6px;padding:10px 15px;display:inline-flex;align-items:center;gap:7px;white-space:nowrap}.room-admin-grid{padding:24px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}.room-admin-card{display:block;border:1px solid #e4e8ed;border-radius:9px;overflow:hidden}.room-admin-card>img,.room-empty-photo{width:100%;height:160px;object-fit:cover;background:#eaedf1}.room-empty-photo{display:grid;place-items:center;color:#6d91ba}.room-admin-card>div:last-child{padding:17px}.room-admin-card h3{font:400 22px 'Playfair Display',serif;margin:7px 0}.room-admin-card p,.room-admin-card strong{font-size:12px;color:#4d76a4}.room-admin-card strong{display:block;color:#375476;margin-top:9px}.room-edit-link{margin-top:14px;font-size:11px;font-weight:600;display:flex;gap:7px;align-items:center;color:#3f6085}.room-empty-copy{color:#5e86b3;font-size:13px;line-height:1.7;padding:20px 0}.room-admin-form{display:grid;gap:21px;padding:28px 30px}.room-admin-form .sede-field select{font:400 14px 'DM Sans',sans-serif;color:#263a51;width:100%;padding:13px 15px;border:1px solid #d9e0e7;border-radius:7px;background:#fff;min-height:47px}.room-form-actions{display:flex;gap:20px;align-items:center}.room-form-actions button{padding:14px 24px;background:#264160;color:#fff;border:0;border-radius:6px;font-size:13px;cursor:pointer}.room-form-actions button:disabled{opacity:.5;cursor:not-allowed}.room-form-actions>a{font-size:12px;color:#4d75a3}.room-unit-list>a{display:flex;align-items:center;gap:18px;padding:18px 30px;border-top:1px solid #eaeef2}.room-unit-list>a:hover{background:#f8f9fa}.room-unit-list>a>div{display:grid;gap:6px;flex:1}.room-unit-list strong{font-size:14px}.room-unit-list small{font-size:11px;color:#698eb9}.room-unit-active,.room-unit-inactive{padding:7px 9px;border-radius:5px;background:#e8eef4;color:#345e8d;font-size:11px;text-transform:capitalize}.room-unit-inactive{background:#f8efe6;color:#9d7746}@media(max-width:1100px){.room-admin-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:680px){.room-admin-grid{grid-template-columns:1fr;padding:16px}.room-head-row{align-items:flex-start;flex-direction:column}.room-admin-form{padding:20px}.room-unit-list>a{padding:16px 20px}}
 
 
 /* Administrador de tipos de alojamiento */
 .room-admin-card{display:flex;flex-direction:column;background:#fff;border-radius:12px;transition:transform .2s,box-shadow .2s;min-width:0}
-.room-admin-card:hover{transform:translateY(-3px);box-shadow:0 14px 32px #243a2c12}
+.room-admin-card:hover{transform:translateY(-3px);box-shadow:0 14px 32px #25395012}
 .room-admin-card-main{display:block;flex:1;min-width:0}
 .room-admin-thumbnail,.room-admin-card-main .room-empty-photo{width:100%;height:185px;object-fit:cover;display:block}
 .room-admin-card-main .room-empty-photo{display:grid;place-items:center}
 .room-admin-card-body{padding:20px!important}
 .room-admin-card-body h3{margin:10px 0 12px;font-size:24px}
 .room-admin-card-meta{display:flex;align-items:center;gap:6px;flex-wrap:wrap;line-height:1.6}
-.room-published-badge,.room-draft-badge{display:inline-block;padding:6px 9px;font-size:10px;letter-spacing:.1em;font-weight:700;border-radius:4px;background:#e8f3e9;color:#35704e}
+.room-published-badge,.room-draft-badge{display:inline-block;padding:6px 9px;font-size:10px;letter-spacing:.1em;font-weight:700;border-radius:4px;background:#e6edf5;color:#325b8a}
 .room-draft-badge{background:#f6f0e5;color:#a17d45}
-.room-manage-photos{display:flex;align-items:center;gap:8px;border-top:1px solid #edf0e9;padding:15px 19px;font-size:12px;color:#365b48;font-weight:600}
+.room-manage-photos{display:flex;align-items:center;gap:8px;border-top:1px solid #e8ecf1;padding:15px 19px;font-size:12px;color:#365272;font-weight:600}
 .room-manage-photos svg:last-child{margin-left:auto}
-.room-manage-photos:hover{background:#f6f9f5}
-.room-empty-state{grid-column:1/-1;display:flex;align-items:center;flex-direction:column;text-align:center;gap:12px;padding:55px 20px;background:#f8faf7;border:1px dashed #cfdacf;border-radius:10px;color:#78917c}
-.room-empty-state h3{font:400 23px 'Playfair Display',serif;color:#314b3b;margin:0}
+.room-manage-photos:hover{background:#f4f7fa}
+.room-empty-state{grid-column:1/-1;display:flex;align-items:center;flex-direction:column;text-align:center;gap:12px;padding:55px 20px;background:#f7f8fa;border:1px dashed #cbd4de;border-radius:10px;color:#5882b1}
+.room-empty-state h3{font:400 23px 'Playfair Display',serif;color:#2f4864;margin:0}
 .room-empty-state p{font-size:13px;margin:0}
-.room-empty-state a{font-size:12px;font-weight:600;color:#305845;text-decoration:underline;text-underline-offset:4px}
-.room-form-section{display:grid;gap:20px;padding:7px 0 29px;border-bottom:1px solid #e7ece6}
+.room-empty-state a{font-size:12px;font-weight:600;color:#314d6e;text-decoration:underline;text-underline-offset:4px}
+.room-form-section{display:grid;gap:20px;padding:7px 0 29px;border-bottom:1px solid #e4e9ee}
 .room-form-section-title{display:flex;align-items:flex-start;gap:16px}
 .room-form-section-title>span{font:600 12px 'Jost',sans-serif;letter-spacing:.1em;color:#ae916a;background:#f7f3ed;border-radius:7px;padding:9px}
-.room-form-section-title h3{font:400 24px 'Playfair Display',serif;color:#2c4235;margin:0 0 6px}
-.room-form-section-title p{margin:0;color:#819085;font-size:12px;line-height:1.6}
+.room-form-section-title h3{font:400 24px 'Playfair Display',serif;color:#2b415a;margin:0 0 6px}
+.room-form-section-title p{margin:0;color:#5e86b3;font-size:12px;line-height:1.6}
 .room-form-section .room-amenities-editor{margin-top:0}
-.room-photos-shortcut{display:flex;align-items:center;gap:15px;border:1px solid #dce8dc;background:#f7faf6;border-radius:9px;padding:19px;color:#315d47}
+.room-photos-shortcut{display:flex;align-items:center;gap:15px;border:1px solid #dae1ea;background:#f5f8fb;border-radius:9px;padding:19px;color:#315074}
 .room-photos-shortcut>span{display:grid;gap:7px;flex:1}
-.room-photos-shortcut strong{font-size:13px}.room-photos-shortcut small{font-size:11px;color:#788b7d;line-height:1.5}
-.room-photos-shortcut:hover{background:#eef6ee}
-.room-new-photos-hint{display:flex;align-items:center;gap:11px;background:#f7f9f6;padding:17px;border-radius:8px;color:#6e8274;font-size:12px;line-height:1.6}
+.room-photos-shortcut strong{font-size:13px}.room-photos-shortcut small{font-size:11px;color:#547eaf;line-height:1.5}
+.room-photos-shortcut:hover{background:#edf2f7}
+.room-new-photos-hint{display:flex;align-items:center;gap:11px;background:#f6f7f9;padding:17px;border-radius:8px;color:#4d75a3;font-size:12px;line-height:1.6}
 .room-form-actions{flex-wrap:wrap}.room-form-actions button{display:inline-flex;align-items:center;gap:9px;font-weight:600}
-.room-admin-form input:focus-visible,.room-admin-form textarea:focus-visible,.room-admin-form select:focus-visible{outline:2px solid #9fb7a8;outline-offset:2px}
+.room-admin-form input:focus-visible,.room-admin-form textarea:focus-visible,.room-admin-form select:focus-visible{outline:2px solid #8da9c9;outline-offset:2px}
 @media(max-width:680px){.room-admin-form{gap:18px}.room-form-section{gap:17px}.room-form-section-title h3{font-size:21px}.room-form-actions button{width:100%;justify-content:center}.room-admin-card-body{padding:17px!important}}
