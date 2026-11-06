@@ -11,12 +11,13 @@ function validId(id:number){return Number.isSafeInteger(id)&&id>0;}
 async function authorizedHotel(sedeId:number){
  const admin=await requireAdmin();
  const sedes=await getSedesForAdmin(admin);
- if(!validId(sedeId)||!sedes.some(s=>s.id===sedeId&&s.tipo==='hotel'))redirect('/admin/habitaciones?status=denegado');
- return createClient();
+ const hotel=sedes.find(s=>s.id===sedeId&&s.tipo==='hotel');
+ if(!validId(sedeId)||!hotel)redirect('/admin/habitaciones?status=denegado');
+ return {db:await createClient(),slug:hotel.slug};
 }
 
 export async function saveRoomType(form:FormData){
- const sede=Number(form.get('sede_id'));const db=await authorizedHotel(sede);
+ const sede=Number(form.get('sede_id'));const {db,slug:sedeSlug}=await authorizedHotel(sede);
  const id=Number(form.get('id')||0);
  const nombre=val(form,'nombre',150),slug=val(form,'slug',150).toLowerCase();
  const capacidad=Number(form.get('capacidad_personas')),camas=Number(form.get('cantidad_camas'));
@@ -35,7 +36,7 @@ export async function saveRoomType(form:FormData){
  }
  if(error)redirect(destination(sede,'saveerror'));
  revalidatePath('/admin/habitaciones');revalidatePath('/coban');revalidatePath('/antigua');
- revalidatePath(`/sedes/${(await getSedesForAdmin(await requireAdmin())).find(s=>s.id===sede)?.slug??''}`);
+ revalidatePath(`/sedes/${sedeSlug}`);
  redirect(destination(sede,'saved'));
 }
 
