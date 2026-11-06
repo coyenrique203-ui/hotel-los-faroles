@@ -18,8 +18,8 @@ export async function EstablishmentEditor({id,kind,status,tab}:{id:number;kind:'
  const sede=await getSedeForAdmin(admin,id);
  if(!sede||sede.tipo!==kind)notFound();
  const [{imagenes},reservasData]=await Promise.all([
-  getGaleria(admin,id),
-  kind==='hotel'?getReservaAdminData(id,true):Promise.resolve(null),
+  getGaleria(admin,id,[sede]),
+  kind==='hotel'?getReservaAdminData(id):Promise.resolve(null),
  ]);
  const parent=kind==='hotel'?'/admin/sedes':kind==='restaurante'?'/admin/restaurante':'/admin/eventos';
  const label=kind==='hotel'?'HOTELES':kind==='restaurante'?'RESTAURANTES':'SALONES DE EVENTOS';
