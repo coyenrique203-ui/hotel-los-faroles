@@ -3,6 +3,7 @@ import {ArrowUpRight, BedDouble, Building2, Camera, Plus, Users, Bed, CheckCircl
 import type {Sede} from '@/lib/admin/sedes';
 import type {RoomType} from '@/lib/admin/habitaciones';
 import {saveRoomType} from '@/app/admin/habitaciones/actions';
+import {FormSubmitButton} from '@/components/admin/shared/form-submit-button';
 import {RoomAmenitiesEditor} from './room-amenities-editor';
 
 const messages:Record<string,string>={
@@ -32,7 +33,7 @@ export function RoomAdmin({sedes,selected,tipos,status,tipoId}:{sedes:Sede[];sel
      <section className="room-form-section"><div className="room-form-section-title"><span>02</span><div><h3>Capacidad y camas</h3><p>Información visible en la tarjeta de la habitación.</p></div></div><div className="sede-form-grid"><Field label="Capacidad máxima de huéspedes" name="capacidad_personas" value={tipo?.capacidad_personas??2} type="number" min={1} max={50} required/><Field label="Cantidad de camas" name="cantidad_camas" value={tipo?.cantidad_camas??1} type="number" min={1} max={30} required/><Field label="Tipo de cama" name="tipo_cama" value={tipo?.tipo_cama} placeholder="Ej. 1 king o 2 matrimoniales"/><Field label="Precio de referencia (Q)" name="precio_desde" value={tipo?.precio_desde} type="number" min={0} hint="Opcional. No representa disponibilidad ni confirma una reserva."/></div></section>
      <section className="room-form-section"><div className="room-form-section-title"><span>03</span><div><h3>Servicios y comodidades</h3><p>Selecciona lo que incluye este tipo de habitación.</p></div></div><RoomAmenitiesEditor key={tipo?.id??'nuevo'} selected={tipo?.comodidades??[]}/></section>
      <section className="room-form-section"><div className="room-form-section-title"><span>04</span><div><h3>Fotografías y publicación</h3><p>La galería permite subir varias imágenes y elegir la principal.</p></div></div>{tipo?<Link className="room-photos-shortcut" href={`/admin/habitaciones/${tipo.id}/galeria`}><Camera size={20}/><span><strong>Administrar fotografías</strong><small>Subir, ordenar, publicar y seleccionar la imagen principal.</small></span><ArrowUpRight size={17}/></Link>:<p className="room-new-photos-hint"><Camera size={18}/> Después de crear el tipo podrás subir sus fotografías desde la tarjeta de arriba.</p>}<input type="hidden" name="imagen_principal" value={tipo?.imagen_principal??''}/><label className="sede-publication"><input type="checkbox" name="publicado" defaultChecked={tipo?.publicado??false}/><span><strong>Mostrar este tipo de habitación en el sitio web</strong><small>Solo será visible si la sede también está publicada.</small></span></label></section>
-     <div className="room-form-actions"><button type="submit"><CheckCircle2 size={17}/>{tipo?'Guardar cambios':'Crear tipo de habitación'}</button>{tipo&&<Link href={`/admin/habitaciones?sede=${selected.id}#form-tipo`}>Cancelar edición</Link>}</div>
+     <div className="room-form-actions"><FormSubmitButton pendingText={tipo?'Guardando habitación...':'Creando habitación...'}><CheckCircle2 size={17}/>{tipo?'Guardar cambios':'Crear tipo de habitación'}</FormSubmitButton>{tipo&&<Link href={`/admin/habitaciones?sede=${selected.id}#form-tipo`}>Cancelar edición</Link>}</div>
     </form>
    </div>
   </>}
