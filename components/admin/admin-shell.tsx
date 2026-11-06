@@ -1,13 +1,16 @@
 'use client';
 import Link from 'next/link';
 import {usePathname} from 'next/navigation';
-import {useState} from 'react';
+import {useEffect,useState} from 'react';
+import {AdminFeedback} from '@/components/admin/shared/admin-feedback';
+import '@/styles/admin-feedback.css';
 import {ArrowUpRight,Menu,X} from 'lucide-react';
 import {adminModules} from '@/lib/admin-modules';
 import {logoutAction} from '@/app/admin/actions';
 import {LogOut} from 'lucide-react';
 export function AdminShell({children,adminName,adminRole='general'}:{children:React.ReactNode;adminName:string;adminRole?:'general'|'sede'}){
- const pathname=usePathname(),[open,setOpen]=useState(false);
- return <div className="admin-app"><aside className={open?'admin-sidebar open':'admin-sidebar'}><Link className="admin-logo" href="/admin"><span>✣</span><div>LOS FAROLES<small>ADMINISTRACIÓN</small></div></Link><div className="admin-nav-label">PANEL DE CONTROL</div><nav>{adminModules.filter(m=>!['reservas','contenido'].includes(m.slug)&&(adminRole==='general'||!['usuarios','portada'].includes(m.slug))).map(({slug,label,icon:Icon})=><Link key={slug} href={'/admin'+(slug?'/'+slug:'')} className={pathname===('/admin'+(slug?'/'+slug:''))?'active':''} onClick={()=>setOpen(false)}><Icon size={18}/>{label}</Link>)}</nav><div className="admin-sidebar-bottom"><Link href="/" target="_blank">VER SITIO PÚBLICO <ArrowUpRight size={16}/></Link></div></aside>
- <div className="admin-main"><header className="admin-topbar"><button className="admin-mobile-toggle" onClick={()=>setOpen(!open)} aria-label="Abrir navegación">{open?<X/>:<Menu/>}</button><div><span>LOS FAROLES</span><strong>Panel de administración · {adminName}</strong></div><form action={logoutAction}><button type="submit" className="admin-logout"><LogOut size={16}/> CERRAR SESIÓN</button></form></header><div className="admin-content">{children}</div></div></div>
+ const pathname=usePathname(),[open,setOpen]=useState(false),[navigating,setNavigating]=useState(false);
+ useEffect(()=>{setNavigating(false);},[pathname]);
+ return <div className="admin-app">{navigating&&<div className="admin-nav-progress" role="status" aria-label="Cargando sección"/>}<aside className={open?'admin-sidebar open':'admin-sidebar'}><Link className="admin-logo" href="/admin" onClick={()=>{if(pathname!=='/admin')setNavigating(true);}}><span>✣</span><div>LOS FAROLES<small>ADMINISTRACIÓN</small></div></Link><div className="admin-nav-label">PANEL DE CONTROL</div><nav>{adminModules.filter(m=>!['reservas','contenido'].includes(m.slug)&&(adminRole==='general'||!['usuarios','portada'].includes(m.slug))).map(({slug,label,icon:Icon})=><Link key={slug} href={'/admin'+(slug?'/'+slug:'')} className={pathname===('/admin'+(slug?'/'+slug:''))?'active':''} onClick={()=>{setOpen(false);if(pathname!=='/admin'+(slug?'/'+slug:''))setNavigating(true);}}><Icon size={18}/>{label}</Link>)}</nav><div className="admin-sidebar-bottom"><Link href="/" target="_blank">VER SITIO PÚBLICO <ArrowUpRight size={16}/></Link></div></aside>
+ <div className="admin-main"><header className="admin-topbar"><button className="admin-mobile-toggle" onClick={()=>setOpen(!open)} aria-label="Abrir navegación">{open?<X/>:<Menu/>}</button><div><span>LOS FAROLES</span><strong>Panel de administración · {adminName}</strong></div><form action={logoutAction}><button type="submit" className="admin-logout"><LogOut size={16}/> CERRAR SESIÓN</button></form></header><div className="admin-content">{children}<AdminFeedback/></div></div></div>
 }
