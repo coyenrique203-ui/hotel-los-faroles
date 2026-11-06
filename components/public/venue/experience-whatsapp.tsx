@@ -1,19 +1,31 @@
 'use client';
 import {useState,type ReactNode} from 'react';
 import {ArrowUpRight,X} from 'lucide-react';
+function guatemalaToday(){
+ const parts=new Intl.DateTimeFormat('en-US',{timeZone:'America/Guatemala',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());
+ const value=(type:string)=>parts.find(part=>part.type===type)?.value??'';
+ return `${value('year')}-${value('month')}-${value('day')}`;
+}
+function followingDay(iso:string){return new Date(Date.parse(`${iso}T12:00:00Z`)+86400000).toISOString().slice(0,10);}
+function openWhatsApp(number:string,message:string){
+ const target=`https://wa.me/${number}?text=${encodeURIComponent(message)}`;
+ const opened=window.open(target,'_blank');
+ if(!opened)window.location.assign(target);
+}
+
 import '@/styles/experiencias.css';
 
 export function ExperienceWhatsApp({type,phone,venueName,children,className='solid-button'}:{type:'restaurant'|'events';phone?:string|null;venueName:string;children:ReactNode;className?:string}){
  const [open,setOpen]=useState(false),[name,setName]=useState(''),[date,setDate]=useState(''),[hour,setHour]=useState(''),[guests,setGuests]=useState(2),[phoneContact,setPhoneContact]=useState(''),[eventType,setEventType]=useState(''),[note,setNote]=useState('');
  const digits=(phone??'').replace(/\D/g,'');
  const restaurant=type==='restaurant';
- const dateToday=new Date().toLocaleDateString('en-CA');
+ const dateToday=guatemalaToday();
  if(digits.length<8)return <span className="reservation-unavailable">Consultas próximamente</span>;
  const submit=(e:React.FormEvent<HTMLFormElement>)=>{
   e.preventDefault();
-  if(!date||!name.trim()||guests<1||guests>10000||(restaurant&&!hour))return;
+  if(!date||date<guatemalaToday()||!name.trim()||guests<1||guests>(restaurant?100:10000)||(restaurant&&!hour))return;
   const lines=[`Hola, quisiera consultar ${restaurant?'disponibilidad de una mesa':'disponibilidad del salón para un evento'} en ${venueName}.`,`A nombre de: ${name.trim()}`,`Fecha: ${date}`,restaurant?`Hora: ${hour}`:null,`${restaurant?'Personas':'Invitados estimados'}: ${guests}`,!restaurant&&eventType?`Tipo de evento: ${eventType}`:null,phoneContact?`Teléfono: ${phoneContact}`:null,note?`Comentarios: ${note}`:null,'Quedo pendiente de confirmación.'].filter(Boolean);
-  window.open(`https://wa.me/${digits}?text=${encodeURIComponent(lines.join('\n'))}`,'_blank','noopener,noreferrer');
+  openWhatsApp(digits,lines.join('\n'));
   setOpen(false);
  };
  return <><button type="button" className={className} onClick={()=>setOpen(true)}>{children}</button>{open&&
