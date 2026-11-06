@@ -1,4 +1,5 @@
 import 'server-only';
+import {cache} from 'react';
 import {createClient} from '@/lib/supabase/server';
 import type {AdminProfile} from '@/lib/auth/require-admin';
 
@@ -11,16 +12,20 @@ export type Sede = {
 };
 
 export async function getSedesForAdmin(admin:AdminProfile):Promise<Sede[]> {
+ return loadSedesForAdmin(admin.id,admin.rol,admin.activo);
+}
+
+const loadSedesForAdmin=cache(async (adminId:string,adminRol:AdminProfile['rol'],activo:boolean):Promise<Sede[]> => {
   const started=performance.now();
   let asignacionesMs=0;
   let sedesMs=0;
   try {
   const supabase=await createClient();
   let allowedIds:number[]|null=null;
-  if(admin.rol==='sede'){
+  if(adminRol==='sede'){
     const assignmentsStarted=performance.now();
     const {data:assignments,error:assignmentError}=await supabase.from('admin_sedes')
-      .select('sede_id').eq('admin_id',admin.id);
+      .select('sede_id').eq('admin_id',adminId);
     asignacionesMs=performance.now()-assignmentsStarted;
     if(assignmentError)throw new Error('No se pudieron consultar las sedes asignadas.');
     allowedIds=(assignments??[]).map(a=>a.sede_id);
@@ -34,14 +39,14 @@ export async function getSedesForAdmin(admin:AdminProfile):Promise<Sede[]> {
   const {data,error}=await query;
   sedesMs=performance.now()-sedesStarted;
   if(error) throw new Error('No se pudieron consultar las sedes. Comprueba las políticas RLS de Supabase.');
-  if(!admin.activo) return [];
+  if(!activo) return [];
   return (data??[]) as Sede[];
   }finally{
     if(process.env.ADMIN_PERF_TIMINGS==='1'){
       console.info(`[rendimiento-admin] sedes asignaciones=${Math.round(asignacionesMs)}ms consulta=${Math.round(sedesMs)}ms total=${Math.round(performance.now()-started)}ms`);
     }
   }
-}
+});
 
 export async function getSedeForAdmin(admin:AdminProfile,id:number):Promise<Sede|null> {
   const sedes=await getSedesForAdmin(admin);
