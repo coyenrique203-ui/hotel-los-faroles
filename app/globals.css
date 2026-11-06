@@ -66,3 +66,11 @@
 @media(max-width:900px){.home-stage .hero{height:790px;min-height:0}.home-stage .hero-copy{top:35%}.home-stage .booking{width:calc(100% - 8%);bottom:20px;grid-template-columns:repeat(4,minmax(0,1fr))}.home-stage .booking>label:first-of-type{grid-column:span 2}.home-stage .booking>label{min-height:72px}.home-stage .booking-submit{grid-column:span 2;min-height:72px}}
 @media(max-width:600px){.home-stage .hero{height:830px;min-height:0}.home-stage .hero-copy{top:33%}.home-stage .hero h1{font-size:clamp(40px,9.5vw,56px)}.home-stage .hero-subtitle{font-size:12px;line-height:1.6}.home-stage .hero-link{margin-top:17px;padding:12px 14px}.home-stage .booking{width:calc(100% - 26px);bottom:13px;grid-template-columns:1fr 1fr;border-radius:10px}.home-stage .booking>label,.home-stage .booking>label:first-of-type{min-height:63px;padding:12px 13px;border-left:0;border-bottom:1px solid #25394f24;grid-column:auto}.home-stage .booking>label:first-of-type,.home-stage .booking>label:nth-of-type(4){grid-column:span 2}.home-stage .booking>label:nth-of-type(2){border-right:1px solid #25394f24}.home-stage .booking-submit{grid-column:span 2;min-height:55px}.home-stage .booking input,.home-stage .booking select,.home-stage .guests{font-size:12px}}
 @media(max-width:375px){.home-stage .hero{height:835px}.home-stage .hero-copy{top:31%}.home-stage .hero h1{font-size:40px}}
+
+/* Portada multimedia: imagen estática y carrusel, sin alterar las demás secciones. */
+.hero-background-image,.hero-background-slides{position:absolute;inset:0;z-index:-2;width:100%;height:100%;pointer-events:none}
+.hero-background-image,.hero-background-slide{background-size:cover;background-position:center;background-repeat:no-repeat}
+.hero-background-slides .hero-background-slide{position:absolute;inset:0;opacity:0;transition:opacity 1.2s ease}
+.hero-background-slides .hero-background-slide.is-active{opacity:1}
+.home-stage .hero:has(.hero-background-image) .hero-photo,.home-stage .hero:has(.hero-background-slides) .hero-photo{opacity:0}
+@media(prefers-reduced-motion:reduce){.hero-background-slides .hero-background-slide{transition:none}}
