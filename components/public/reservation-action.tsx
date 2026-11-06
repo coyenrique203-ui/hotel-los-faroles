@@ -34,6 +34,7 @@ export function ReservationAction({config,hotel,venueName,roomName,className='',
   const lines=[`Hola, quisiera consultar una reserva en ${venueName}.`,roomName?`Habitación: ${roomName}`:null,`Nombre: ${name.trim()}`,hotel?`Llegada: ${date}`:`Fecha solicitada: ${date}`,hotel?`Salida: ${endDate}`:null,`Personas: ${guests}`,phone?`Teléfono: ${phone}`:null,note?`Comentarios: ${note}`:null].filter(Boolean);
   openWhatsApp(number,lines.join('\n'));
   setOpen(false);
+  setName('');setDate('');setEndDate('');setGuests(2);setPhone('');setNote('');
  };
  const today=guatemalaToday();
  return <>
