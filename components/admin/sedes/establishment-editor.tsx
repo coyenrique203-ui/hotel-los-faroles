@@ -30,5 +30,5 @@ export async function EstablishmentEditor({id,kind,status,tab}:{id:number;kind:'
  {tab!=='fotos'&&status==='denegado'&&<div className="sede-error" role="alert">No tienes permisos para modificar este establecimiento.</div>}
  <SedeForm sede={sede}/></>} photos={<SedePhotos sede={sede} imagenes={imagenes} status={tab==='fotos'?status:undefined} social={kind!=='hotel'}/>}
  activities={kind==='eventos'?<EventActivitiesAdmin sede={sede} status={tab==='actividades'?status:undefined}/>:undefined}
- reservas={kind==='hotel'&&reservasData?<SedeReservaciones sede={sede} config={reservasData.config} tipos={reservasData.tipos} status={tab==='reservas'?status:undefined}/>:undefined}/></AdminShell>;
+ reservas={kind==='hotel'&&reservasData?<SedeReservaciones sede={sede} config={reservasData.config} status={tab==='reservas'?status:undefined}/>:undefined}/></AdminShell>;
 }
