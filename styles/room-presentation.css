@@ -19,6 +19,8 @@
 
 /* Acceso flotante discreto a disponibilidad, exclusivo de páginas de hotel. */
 .venue-rooms-cta{position:fixed;right:clamp(16px,3vw,44px);bottom:calc(22px + env(safe-area-inset-bottom,0px));z-index:80;display:flex;align-items:center;justify-content:flex-end;pointer-events:none}
+.venue-rooms-cta .reservation-modal-backdrop{pointer-events:auto}
+.venue-rooms-cta:has(.reservation-modal-backdrop){z-index:100000}
 .venue-rooms-cta .solid-button{pointer-events:auto;width:auto;min-height:54px;display:inline-flex;align-items:center;justify-content:center;gap:17px;padding:16px 21px;background:#213d32;color:#fff;border:1px solid #d9c49a;border-radius:999px;box-shadow:0 8px 26px #122c2552;font-size:10px;font-weight:700;letter-spacing:.09em;line-height:1.4;white-space:nowrap;cursor:pointer;transition:transform .2s ease,box-shadow .2s ease,background-color .2s ease}
 .venue-rooms-cta .solid-button:hover{background:#345746;transform:translateY(-3px);box-shadow:0 12px 32px #122c2566}
 .venue-rooms-cta .solid-button:focus-visible{outline:3px solid #c7a876;outline-offset:4px}
